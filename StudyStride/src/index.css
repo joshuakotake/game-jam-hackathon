@@ -1,1 +1,20 @@
+@font-face {
+  font-family: Pixeloid;
+  src: url(../src/assets/fonts/PixeloidSans-mLxMm.ttf);
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: Pixeloid-Bold;
+  src: url(../src/assets/fonts/PixeloidSansBold-PKnYd.ttf);
+  font-weight: bold;
+  font-style: normal;
+}
+
 @import "tailwindcss";
+
+@theme {
+  --font-pixeloid: Pixeloid, "sans-serif";
+  --font-pixeloid-bold: Pixeloid-Bold, "sans-serif";
+}
