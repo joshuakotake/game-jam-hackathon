@@ -289,7 +289,16 @@ function App() {
       {/* Header */}
       <div className="min-h-20 mb-1 bg-[#303030] flex flex-col justify-center relative">
         <div className="px-4 text-center text-white">
-          <h1 className="text-xl font-bold">StudyStride</h1>
+          <div className="flex items-center justify-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 12 9" shape-rendering="crispEdges" className="w-6 h-6">
+              <metadata>Made with Pixels to Svg https://codepen.io/shshaw/pen/XbxvNj</metadata>
+              <path stroke="#303030" d="M4 0h4M2 1h2M8 1h2M1 2h1M10 2h1M0 3h1M11 3h1M0 4h1M11 4h1M0 5h1M11 5h1M0 6h1M11 6h1M1 7h2M9 7h2M3 8h6" />
+              <path stroke="#a1a1a1" d="M4 1h4M8 2h2M10 3h1M10 4h1M2 5h1M7 5h1M10 5h1" />
+              <path stroke="#787878" d="M2 2h6M1 3h2M4 3h2M7 3h3M1 4h2M4 4h2M7 4h3M1 5h1M3 5h4M8 5h2M1 6h10M3 7h6" />
+              <path stroke="#000000" d="M3 3h1M6 3h1M3 4h1M6 4h1" />
+            </svg>
+            <h1 className="text-xl font-bold">StudyStride</h1>
+          </div>
           <div className="mt-1">
             <p className="text-sm">
               {hasStoredDueDate
