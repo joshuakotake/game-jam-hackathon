@@ -304,8 +304,13 @@ function App() {
               className="p-2 rounded-full hover:bg-gray-700 transition"
               title="Pause Game"
             >
-              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="white">
-                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+              <svg className="w-5 h-5" viewBox="0 -0.5 13 13" fill="white">
+              <metadata>Made with Pixels to Svg https://codepen.io/shshaw/pen/XbxvNj</metadata>
+              <path stroke="#000000" d="M2 0h9M1 1h1M11 1h1M0 2h1M12 2h1M0 3h1M3 3h2M7 3h2M12 3h1M0 4h1M3 4h2M7 4h2M12 4h1M0 5h1M3 5h2M7 5h2M12 5h1M0 6h1M3 6h2M7 6h2M12 6h1M0 7h1M3 7h2M7 7h2M12 7h1M0 8h1M3 8h2M7 8h2M12 8h1M0 9h1M3 9h2M7 9h2M12 9h1M0 10h1M12 10h1M1 11h1M11 11h1M2 12h9" />
+              <path stroke="#ffffff" d="M2 1h5M1 2h3M1 3h2M1 4h1M1 5h1M1 6h1" />
+              <path stroke="#d4d4d4" d="M7 1h4M4 2h8M6 3h1M10 3h2M2 4h1M6 4h1M10 4h1M2 5h1M6 5h1M10 5h1M2 6h1M6 6h1M1 7h2M6 7h1M1 8h2M6 8h1M1 9h2M6 9h1M1 10h5M2 11h2" />
+              <path stroke="#a1a1a1" d="M5 3h1M9 3h1M5 4h1M9 4h1M11 4h1M5 5h1M9 5h1M11 5h1M5 6h1M9 6h3M5 7h1M9 7h3M5 8h1M9 8h2M5 9h1M9 9h2M6 10h4M4 11h4" />
+              <path stroke="#787878" d="M11 8h1M11 9h1M10 10h2M8 11h3" />
               </svg>
             </button>
             <button
@@ -313,8 +318,13 @@ function App() {
               className="p-2 rounded-full hover:bg-gray-700 transition"
               title="Reset Game"
             >
-              <svg className="w-5 h-5" viewBox="0 -0.5 9 9" shapeRendering="crispEdges">
-                <path stroke="white" d="M0 0h1M3 0h3M0 1h1M2 1h1M6 1h1M0 2h2M7 2h1M0 3h4M8 3h1M8 4h1M0 5h1M8 5h1M1 6h1M7 6h1M2 7h1M6 7h1M3 8h3" />
+              <svg className="w-5 h-5" viewBox="0 -0.5 13 13" shapeRendering="crispEdges">
+                <metadata>Made with Pixels to Svg https://codepen.io/shshaw/pen/XbxvNj</metadata>
+                <path stroke="#000000" d="M2 0h9M1 1h1M11 1h1M0 2h1M12 2h1M0 3h1M2 3h1M5 3h4M12 3h1M0 4h1M2 4h1M4 4h1M9 4h1M12 4h1M0 5h1M2 5h2M10 5h1M12 5h1M0 6h1M2 6h4M10 6h1M12 6h1M0 7h1M10 7h1M12 7h1M0 8h1M3 8h1M10 8h1M12 8h1M0 9h1M4 9h1M9 9h1M12 9h1M0 10h1M5 10h4M12 10h1M1 11h1M11 11h1M2 12h9" />
+                <path stroke="#ffffff" d="M2 1h5M1 2h2M1 3h1M1 4h1M1 5h1M1 6h1" />
+                <path stroke="#d4d4d4" d="M7 1h4M3 2h9M3 3h2M10 3h2M3 4h1M6 4h3M5 5h5M6 6h4M1 7h9M1 8h2M4 8h6M1 9h3M6 9h3M1 10h4M2 11h2" />
+                <path stroke="#a1a1a1" d="M9 3h1M5 4h1M10 4h2M4 5h1M11 5h1M11 6h1M11 7h1M5 9h1M10 9h1M9 10h1M4 11h4" />
+                <path stroke="#787878" d="M11 8h1M11 9h1M10 10h2M8 11h3" />
               </svg>
             </button>
           </div>
@@ -327,7 +337,7 @@ function App() {
       </div>
 
       {/* Game Container */}
-      <div className="flex-1 min-h-[320px] max-h-[520px] overflow-hidden mx-2 bg-white" style={{ position: 'relative' }}>
+      <div className="flex-1 min-h-[419px] max-h-[419px] overflow-hidden mx-2 bg-white" style={{ position: 'relative' }}>
         <div
         style={{
           position: 'absolute',
@@ -376,19 +386,48 @@ function App() {
           <path stroke="#f7f7f7" d="M490 18h5M493 19h1" />
         </svg>
       </div>
+      
       </div>
-        <div
-          style={{
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            bottom: 0,
-            width: '100%',
-            height: '37%',
-            zIndex: 0,
-            overflow: 'hidden',
-          }}
-        >
+      <div
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: '100%',
+          height: '30%',
+          zIndex: 0,
+          overflow: 'hidden',
+        }}
+      >
+      <div
+       style={{
+         position: 'absolute',
+         left: '50%',
+         bottom: '41px', // adjust as needed to sit on ground
+         transform: 'translateX(-50%)',
+         zIndex: 2,
+         pointerEvents: 'none',
+         display: 'flex',
+         justifyContent: 'center',
+         alignItems: 'flex-end',
+         height: '60px',
+       }}
+     >
+       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 23 25" shapeRendering="crispEdges" style={{ height: '60px', width: 'auto' }}>
+        <metadata>Made with Pixels to Svg https://codepen.io/shshaw/pen/XbxvNj</metadata>
+        <path stroke="#d4d4d4" d="M20 0h1M19 1h3M19 2h1M21 2h1M19 3h1M21 3h1M19 4h1M21 4h1M19 5h1M21 5h1M19 6h1M21 6h1M19 7h1M21 7h1M19 8h1M21 8h1M19 9h1M21 9h1M19 10h1M21 10h1M2 11h1M7 11h2M19 11h1M21 11h1M1 12h1M19 12h1M21 12h1M11 13h1M19 13h1M21 13h1M6 14h1M10 14h3M6 15h1M11 15h1M6 16h2M1 17h1M7 17h1M1 18h1M6 21h1M6 22h1" />
+        <path stroke="#b3b3b3" d="M20 2h1M20 3h1M20 4h1M20 5h1M20 6h1M20 7h1M20 8h1M20 9h1M20 10h1M20 11h1M20 12h1M20 13h1" />
+        <path stroke="#303030" d="M8 3h4M6 4h2M12 4h2M5 5h1M14 5h1M4 6h1M15 6h1M4 7h1M15 7h1M4 8h1M15 8h1M4 9h1M15 9h1M2 10h5M13 10h5M1 11h1M5 11h1M14 11h1M18 11h1M0 12h1M6 12h1M15 12h1M0 13h1M5 13h1M15 13h1M4 14h1M15 14h4M2 15h1M4 15h1M14 15h1M16 15h1M19 15h2M2 16h1M4 16h1M14 16h1M16 16h1M20 16h1M0 17h1M3 17h1M5 17h1M13 17h1M17 17h4M0 18h1M3 18h1M5 18h1M13 18h1M20 18h1M1 19h2M5 19h1M13 19h1M5 20h1M13 20h1M5 21h1M13 21h1M5 22h1M8 22h3M13 22h1M5 23h1M7 23h1M13 23h1M5 24h2M11 24h2" />
+        <path stroke="#a1a1a1" d="M8 4h4M6 5h2M5 6h1M5 7h1M5 8h1M8 8h1M13 8h1M3 11h2M9 11h5M3 12h3M8 12h3M12 12h3M2 13h3M8 13h2M13 13h2M8 14h2M13 14h2M7 15h3M13 15h1M8 16h3M13 16h1M6 17h1M9 17h2M2 18h1M7 18h1M10 18h2M8 19h1M10 19h3M8 21h5M12 22h1" />
+        <path stroke="#787878" d="M8 5h6M6 6h3M10 6h2M13 6h2M6 7h3M10 7h2M13 7h2M6 8h2M9 8h4M14 8h1M5 9h10M7 10h6M6 11h1M15 11h2M16 12h2M6 13h1M16 13h2M5 14h1M5 15h1M17 15h1M5 16h1M17 16h3" />
+        <path stroke="#000000" d="M9 6h1M12 6h1M9 7h1M12 7h1" />
+        <path stroke="#545454" d="M17 11h1M11 12h1M18 12h1M10 13h1M12 13h1M1 14h3M1 15h1M10 15h1M12 15h1M18 15h1M21 15h1M1 16h1M11 16h1M21 16h1M2 17h1M6 20h7M11 22h1M11 23h1" />
+        <path stroke="#b5b5b5" d="M2 12h1M7 12h1M1 13h1M7 13h1M7 14h1M12 16h1M8 17h1M11 17h2M8 18h2M12 18h1M9 19h1M7 21h1M7 22h1M6 23h1M12 23h1" />
+        <path stroke="#424242" d="M18 13h1M22 13h1M19 14h3M19 19h3M20 20h1" />
+        <path stroke="#8f8f8f" d="M6 18h1M6 19h2" />
+        </svg>
+     </div>
           <div className="ground-scroll">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 400 60" shape-rendering="crispEdges">
               <metadata>Made with Pixels to Svg https://codepen.io/shshaw/pen/XbxvNj</metadata>
