@@ -36,7 +36,7 @@ export default function StartModal({ dueDate, setDueDate, dateMissing, dateInval
           <div className="mt-6 flex justify-end">
             <button
               type="submit"
-              className="rounded-lg bg-gray-600 px-4 py-3 text-sm text-white shadow hover:bg-gray-800"
+              className="rounded-lg bg-gray-600 px-4 py-3 text-sm text-white shadow hover:bg-gray-700"
             >
               Start Task
             </button>
