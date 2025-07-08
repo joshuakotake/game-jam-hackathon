@@ -4,13 +4,14 @@ import EnergyBar from './bars/EnergyBar';
 import HealthBar from './bars/HealthBar';
 import ThirstBar from './bars/ThirstBar';
 import HungerBar from './bars/HungerBar';
-import { decrementBars, getHealthPenalty } from './functions/update';
+import { getHealthPenalty } from './functions/update';
 import StartModal from './modals/StartModal';
 import { isDueDateValid, formatDueDate } from './utils/timeUtils';
 import ResetModal from './modals/ResetModal'
 import ProgressBar from './bars/ProgressBar';
 import PauseModal from './modals/PauseModal';
 import RestModal from './modals/RestModal';
+import EndModal from './modals/EndModal';
 
 function getInitialBars() {
   const stored = localStorage.getItem('barValues');
@@ -26,16 +27,35 @@ function getInitialBars() {
         return { energy, health, thirst, hunger };
       }
     } catch {
-      console.log("Error getting inital bar")
+      console.log("Error getting initial bar")
     }
   }
   return { energy: 10, health: 10, thirst: 10, hunger: 10 };
+}
+
+function getInitialTotalHealthLost() {
+  const stored = localStorage.getItem('totalHealthLost');
+  if (stored) {
+    try {
+      const totalHealthLost = JSON.parse(stored);
+      if (typeof totalHealthLost === 'number') {
+        return totalHealthLost;
+      }
+    } catch {
+      console.log("Error getting initial totalHealthLost")
+    }
+  }
+  return 0;
 }
 
 function App() {
   // Game Status
   const [gameStarted, setGameStarted] = useState(false);
   const [gamePaused, setGamePaused] = useState(false);
+  const [gameEnded, setGameEnded] = useState(false);
+
+  // Health tracking
+  const [totalHealthLost, setTotalHealthLost] = useState(0);
 
   // Status bars state
   const [energy, setEnergy] = useState(() => getInitialBars().energy);
@@ -48,7 +68,7 @@ function App() {
   const [timeLeft, setTimeLeft] = useState(0)
 
   // Start Game
-  const [showStartModal, setShowStartModal] = useState(true)
+  const [showStartModal, setShowStartModal] = useState(!localStorage.getItem('dueDate'))
   const [dueDateInput, setDueDateInput] = useState('')
   const [dateMissing, setDateMissing] = useState(false)
   const [dateInvalid, setDateInvalid] = useState(false)
@@ -59,6 +79,9 @@ function App() {
   // Rest Modal
   const [showRestModal, setShowRestModal] = useState(false);
   const [currentActivity, setCurrentActivity] = useState(null);
+
+  // End Modal
+  const [showEndModal, setShowEndModal] = useState(false);
 
   // Load stored bar values
   useEffect(() => {
@@ -91,6 +114,11 @@ function App() {
     );
   }, [energy, health, thirst, hunger]);
 
+  // Save totalHealthLost to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('totalHealthLost', JSON.stringify(totalHealthLost));
+  }, [totalHealthLost]);
+
   // Load stored due date and set game as started if exists
   useEffect(() => {
     const storedDueDate = localStorage.getItem('dueDate');
@@ -99,32 +127,61 @@ function App() {
       setDueDateInput(storedDueDate);
       setShowStartModal(false);
       setGameStarted(true);
+      
+      const storedHealthLost = getInitialTotalHealthLost();
+      setTotalHealthLost(storedHealthLost);
     }
   }, []);
 
-  // Status bars effect
-  useEffect(() => {
-    if (!gameStarted || gamePaused) return;
-    
-    const interval = setInterval(() => {
-      const newBars = gamePaused ? 
-        { energy, thirst, hunger } : 
-        decrementBars({ energy, thirst, hunger });
+    // Status bars effect
+    useEffect(() => {
+      if (!gameStarted || gamePaused || gameEnded) return;
       
-      setEnergy(newBars.energy);
-      setThirst(newBars.thirst);
-      setHunger(newBars.hunger);
-  
-      const penalty = gamePaused ? 0 : getHealthPenalty(newBars);
-      if (penalty > 0) {
-        setHealth(h => Math.max(h - penalty, 1));
-      } else if (!gamePaused && energy === 10 && thirst === 10 && hunger === 10) {
-        setHealth(h => Math.min(h + 1, 10));
-      }
-    }, 5000);
+      // Energy decrements every 18 minutes
+      const energyInterval = setInterval(() => {
+        if (!gamePaused) {
+          setEnergy(prev => Math.max(prev - 1, 0));
+        }
+      }, 18 * 60 * 1000);
+      
+      // Thirst decrements every 15 minutes
+      const thirstInterval = setInterval(() => {
+        if (!gamePaused) {
+          setThirst(prev => Math.max(prev - 1, 0));
+        }
+      }, 15 * 60 * 1000);
+      
+      // Hunger decrements every 36 minutes
+      const hungerInterval = setInterval(() => {
+        if (!gamePaused) {
+          setHunger(prev => Math.max(prev - 1, 0));
+        }
+      }, 36 * 60 * 1000);
+      
+      // Penalty and health checks every minute
+      const healthInterval = setInterval(() => {
+        if (!gamePaused) {
+          const penalty = getHealthPenalty({ energy, thirst, hunger });
+          if (penalty > 0) {
+            setHealth(h => {
+              const newHealth = Math.max(h - penalty, 1);
+              setTotalHealthLost(prev => prev + (h - newHealth));
+              console.log(totalHealthLost)
+              return newHealth;
+            });
+          } else if (energy === 10 && thirst === 10 && hunger === 10) {
+            setHealth(h => Math.min(h + 1, 10));
+          }
+        }
+      }, 60000);
     
-    return () => clearInterval(interval);
-  }, [energy, thirst, hunger, gameStarted, gamePaused]);
+    return () => {
+      clearInterval(energyInterval);
+      clearInterval(thirstInterval);
+      clearInterval(hungerInterval);
+      clearInterval(healthInterval);
+    }
+  }, [energy, thirst, hunger, gameStarted, gamePaused, gameEnded]);
 
   // Countdown effect
   useEffect(() => {
@@ -134,7 +191,14 @@ function App() {
       const now = new Date();
       const end = new Date(dueDateInput);
       const difference = end - now;
-      setTimeLeft(difference > 0 ? difference : 0);
+      
+      if (difference <= 0) {
+        setTimeLeft(0);
+        setGameEnded(true);
+        setShowEndModal(true);
+      } else {
+        setTimeLeft(difference);
+      }
     };
     updateCountdown();
     
@@ -168,10 +232,13 @@ function App() {
   const resetGame = () => {
     localStorage.removeItem('dueDate')
     localStorage.removeItem('assignmentStartTime')
+    localStorage.removeItem('totalHealthLost')
     setDueDateInput('')
     setHasStoredDueDate(false)
     setShowStartModal(true)
     setGameStarted(false);
+    setGameEnded(false);
+    setTotalHealthLost(0);
     // Reset all bars to 10 and update localStorage
     setEnergy(10);
     setHealth(10);
@@ -215,9 +282,9 @@ function App() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen bg-gray-800 max-w-4xl mx-auto">
+    <div className="flex flex-col h-screen bg-[#303030] max-w-4xl mx-auto">
       {/* Header */}
-      <div className="min-h-20 mb-1 bg-gray-800 flex flex-col justify-center relative">
+      <div className="min-h-20 mb-1 bg-[#303030] flex flex-col justify-center relative">
         <div className="px-4 text-center text-white">
           <h1 className="text-xl font-bold">StudyStride</h1>
           <div className="mt-1">
@@ -255,11 +322,9 @@ function App() {
       </div>
 
       {/* Progress Bar */}
-      {hasStoredDueDate && (
-        <div className='mx-2'>
-          <ProgressBar dueDate={dueDateInput} />
-        </div>
-      )}
+      <div className='mx-2'>
+        <ProgressBar dueDate={dueDateInput} />
+      </div>
 
       {/* Game Container */}
       <div className="flex-1 min-h-[320px] max-h-[520px] bg-gray-200 overflow-hidden mx-2"></div>
@@ -312,6 +377,15 @@ function App() {
         <RestModal 
           onComplete={completeRestActivity}
           activityType={currentActivity}
+        />
+      )}
+      {showEndModal && (
+        <EndModal 
+          healthLost={totalHealthLost}
+          onRestart={() => {
+            resetGame();
+            setShowEndModal(false);
+          }}
         />
       )}
     </div>
