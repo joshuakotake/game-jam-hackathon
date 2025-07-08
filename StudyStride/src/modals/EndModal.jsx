@@ -2,10 +2,11 @@ import React from 'react';
 
 const EndModal = ({ healthLost, onRestart }) => {
   const getRanking = (healthLost) => {
-    if (healthLost / 2 >= 10) return 'F';
-    if (healthLost / 2 >= 6) return 'D';
-    if (healthLost / 2 >= 3) return 'C';
-    if (healthLost / 2 >= 1) return 'B';
+    if (healthLost / 2 >= 9) return 'F';
+    if (healthLost / 2 >= 7) return 'D';
+    if (healthLost / 2 >= 5) return 'C';
+    if (healthLost / 2 >= 3) return 'B';
+    if (healthLost / 2 >= 1) return 'A';
     return 'S';
   };
 
@@ -68,19 +69,19 @@ const EndModal = ({ healthLost, onRestart }) => {
               </div>
               <div className="flex justify-between">
                 <span className="text-blue-400 font-semibold">B Rank:</span>
-                <span>3-5 health lost</span>
+                <span>3-4 health lost</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-orange-400 font-semibold">C Rank:</span>
-                <span>6-8 health lost</span>
+                <span>5-6 health lost</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-red-400 font-semibold">D Rank:</span>
-                <span>9 health lost</span>
+                <span>7-8 health lost</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-red-600 font-semibold">F Rank:</span>
-                <span>10+ total health lost</span>
+                <span>9+ total health lost</span>
               </div>
             </div>
           </div>

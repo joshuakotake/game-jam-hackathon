@@ -140,23 +140,26 @@ function App() {
       // Energy decrements every 18 minutes
       const energyInterval = setInterval(() => {
         if (!gamePaused) {
-          setEnergy(prev => Math.max(prev - 1, 0));
+          setEnergy(prev => Math.max(prev - 1, 1));
         }
       }, 18 * 60 * 1000);
+      // 18 * 60 * 1000
       
       // Thirst decrements every 15 minutes
       const thirstInterval = setInterval(() => {
         if (!gamePaused) {
-          setThirst(prev => Math.max(prev - 1, 0));
+          setThirst(prev => Math.max(prev - 1, 1));
         }
       }, 15 * 60 * 1000);
+      // 15 * 60 * 1000
       
       // Hunger decrements every 36 minutes
       const hungerInterval = setInterval(() => {
         if (!gamePaused) {
-          setHunger(prev => Math.max(prev - 1, 0));
+          setHunger(prev => Math.max(prev - 1, 1));
         }
       }, 36 * 60 * 1000);
+      // 36 * 60 * 1000
       
       // Penalty and health checks every minute
       const healthInterval = setInterval(() => {
@@ -169,11 +172,11 @@ function App() {
               console.log(totalHealthLost)
               return newHealth;
             });
-          } else if (energy === 10 && thirst === 10 && hunger === 10) {
+          } else if (energy >= 8 && thirst >= 8 && hunger >= 8) {
             setHealth(h => Math.min(h + 1, 10));
           }
         }
-      }, 60000);
+      }, 5000);
     
     return () => {
       clearInterval(energyInterval);
