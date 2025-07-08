@@ -78,10 +78,10 @@ const ProgressBar = ({ dueDate }) => {
   };
 
   return (
-    <div className="w-full bg-white shadow-md p-3 border-b">
+    <div className="w-full bg-gray-800 p-3">
       <div className="flex justify-between items-center mb-2">
-        <h3 className="text-sm font-medium text-gray-600">Assignment Progress</h3>
-        <span className={`text-sm font-medium ${getTextColor()}`}>
+        <h3 className="text-sm font-medium text-gray-300">Assignment Progress</h3>
+        <span className="italic text-sm font-medium text-gray-300">
           {timeRemaining}
         </span>
       </div>
@@ -93,7 +93,7 @@ const ProgressBar = ({ dueDate }) => {
         />
       </div>
       
-      <div className="mt-1 text-xs text-gray-500 text-right">
+      <div className="mt-1 text-xs text-gray-300 text-right">
         {Math.round(progress)}% time elapsed
       </div>
     </div>
