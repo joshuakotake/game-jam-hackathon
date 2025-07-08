@@ -87,13 +87,23 @@
 .sky-scroll {
   display: flex;
   width: 200%;
+  top: 0;
+  left: 0;
   height: 100%;
-  animation: ground-scroll 40s linear infinite;
+  position: absolute;
+  z-index: 0;
+  animation: sky-scroll 100s linear infinite;
 }
 
-.ground-scroll svg, .sky-scroll svg {
+.ground-scroll svg {
   width: 50%;
   height: 100%;
+  flex-shrink: 0;
+}
+
+.sky-scroll svg {
+  width: 50%;
+  height: 200%;
   flex-shrink: 0;
 }
 
