@@ -1,6 +1,6 @@
-# 🎮 Study Stride
+# 👾 Study Stride 🕹️
 
-Study Stride is a web program designed to help students keep track of their wellbeing while working on assignments. 
+Study Stride is an 8-bit inspired web program designed to help students keep track of their wellbeing while working on assignments. 
 
 Many students forget to keep themselves healthy and neglect basic needs when under the stress of assignments.
 
