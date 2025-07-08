@@ -41,3 +41,87 @@
   background: #666;
   transform: scale(0.95);
 }
+
+.bar-segments {
+  display: flex;
+  gap: 4px;
+}
+
+.bar-segment {
+  width: 30px;
+  height: 20px;
+  border: 2px solid #222;
+  background: #eee;
+  box-sizing: border-box;
+  image-rendering: pixelated;
+}
+
+/* Color for each bar type */
+.bar-container:has(.bar-label:contains('ENERGY')) .bar-segment.filled { background: #6cf; }
+.bar-container:has(.bar-label:contains('HEALTH')) .bar-segment.filled { background: #e74c3c; }
+.bar-container:has(.bar-label:contains('THIRST')) .bar-segment.filled { background: #3498db; }
+.bar-container:has(.bar-label:contains('HUNGER')) .bar-segment.filled { background: #f1c40f; }
+
+/* fallback for browsers without :has() */
+.bar-segment.filled { background: #6cf; }
+
+/* Center bars in bottom left */
+.bars-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100%;
+  width: 100%;
+  padding-left: 40px;
+}
+
+.ground-scroll {
+  display: flex;
+  width: 190%;
+  height: 100%;
+  animation: ground-scroll 10s linear infinite;
+}
+
+
+.sky-scroll {
+  display: flex;
+  width: 200%;
+  top: 0;
+  left: 0;
+  height: 100%;
+  position: absolute;
+  z-index: 0;
+  animation: sky-scroll 100s linear infinite;
+}
+
+.ground-scroll svg {
+  width: 50%;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.sky-scroll svg {
+  width: 50%;
+  height: 200%;
+  flex-shrink: 0;
+}
+
+
+@keyframes ground-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes sky-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
