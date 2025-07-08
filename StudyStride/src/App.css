@@ -1,7 +1,73 @@
-#root {
-  margin: 0 auto;
-  padding: 2rem;
-  padding-bottom: 0;
-  background-color: oklch(27.8% 0.033 256.848) ;
-  font-family: Pixeloid;
+/* Use Pixeloid font for retro look */
+.bar-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+  font-family: Pixeloid, monospace, cursive;
+  font-size: 1.1rem;
+}
+
+.bar-label {
+  width: 110px;
+  margin-right: 10px;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+}
+
+.bar-emoji-btn {
+  background: #222;
+  border: 2px solid #fff;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 1.3rem;
+  margin-right: 8px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  padding: 2px 7px;
+  outline: none;
+}
+.bar-emoji-btn:hover {
+  background: #444;
+  transform: scale(1.1);
+}
+.bar-emoji-btn:active {
+  background: #666;
+  transform: scale(0.95);
+}
+
+.bar-segments {
+  display: flex;
+  gap: 4px;
+}
+
+.bar-segment {
+  width: 30px;
+  height: 20px;
+  border: 2px solid #222;
+  background: #eee;
+  box-sizing: border-box;
+  image-rendering: pixelated;
+}
+
+/* Color for each bar type */
+.bar-container:has(.bar-label:contains('ENERGY')) .bar-segment.filled { background: #6cf; }
+.bar-container:has(.bar-label:contains('HEALTH')) .bar-segment.filled { background: #e74c3c; }
+.bar-container:has(.bar-label:contains('THIRST')) .bar-segment.filled { background: #3498db; }
+.bar-container:has(.bar-label:contains('HUNGER')) .bar-segment.filled { background: #f1c40f; }
+.bar-container:has(.bar-label:contains('SANITY')) .bar-segment.filled { background: #9b59b6; }
+
+/* fallback for browsers without :has() */
+.bar-segment.filled { background: #6cf; }
+
+/* Center bars in bottom left */
+.bars-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  height: 100%;
+  width: 100%;
+  padding-left: 40px;
 }
