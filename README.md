@@ -4,7 +4,7 @@ Study Stride is a web program designed to help students keep track of their well
 
 It is easy to forget to keep yourself healthy when under the stress of assignments. 
 
-Study Strive aims to provide a gamified visual indicator to help students identify when they should rehydrate, eat or rest.
+Study Stride aims to provide a gamified visual indicator to help students identify when they should rehydrate, eat or rest.
 
 By gamifying self-care, StudyStride makes wellbeing fun and rewarding!
 
