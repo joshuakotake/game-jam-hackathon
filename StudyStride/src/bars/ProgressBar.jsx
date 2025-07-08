@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 const ProgressBar = ({ dueDate }) => {
   const [progress, setProgress] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState('');
-  const [isOverdue, setIsOverdue] = useState(false);
 
   useEffect(() => {
     const updateProgress = () => {
@@ -12,7 +11,6 @@ const ProgressBar = ({ dueDate }) => {
       
       // Calculate time remaining
       const timeDiff = due.getTime() - now.getTime();
-      const isOverdueNow = timeDiff <= 0;
       
       // Get the start time from localStorage or use current time as start
       let startTime = localStorage.getItem('assignmentStartTime');
@@ -27,30 +25,25 @@ const ProgressBar = ({ dueDate }) => {
       
       // Format time remaining
       let timeString = '';
-      if (isOverdueNow) {
-        timeString = 'Overdue!';
+      const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+      
+      if (days > 0) {
+        timeString = `${days}d ${hours}h ${minutes}m remaining`;
+      } else if (hours > 0) {
+        timeString = `${hours}h ${minutes}m remaining`;
+      } else if (minutes > 0) {
+        timeString = `${minutes}m ${seconds}s remaining`;
+      } else if (seconds > 0) {
+        timeString = `${seconds}s remaining`;
       } else {
-        const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-        
-        if (days > 0) {
-          timeString = `${days}d ${hours}h ${minutes}m remaining`;
-        } else if (hours > 0) {
-          timeString = `${hours}h ${minutes}m remaining`;
-        } else if (minutes > 0) {
-          timeString = `${minutes}m ${seconds}s remaining`;
-        } else if (seconds > 0) {
-          timeString = `${seconds}s remaining`;
-        } else {
-          timeString = 'Due now!';
-        }
+        timeString = 'Due now!';
       }
       
       setProgress(progressPercentage);
       setTimeRemaining(timeString);
-      setIsOverdue(isOverdueNow);
     };
 
     updateProgress();
