@@ -1,7 +1,8 @@
-#root {
+html, body {
   margin: 0 auto;
   background-color: #303030;
   font-family: Pixeloid, monospace, cursive;
+  min-height: 100vh;
 }
 
 .bar-container {
@@ -80,7 +81,7 @@
   display: flex;
   width: 190%;
   height: 100%;
-  animation: ground-scroll 10s linear infinite;
+  animation: ground-scroll 20s linear infinite;
 }
 
 
