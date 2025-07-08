@@ -4,7 +4,6 @@ import EnergyBar from './bars/EnergyBar'
 import HealthBar from './bars/HealthBar'
 import ThirstBar from './bars/ThirstBar'
 import HungerBar from './bars/HungerBar'
-import SanityBar from './bars/SanityBar'
 import { decrementBars, getHealthPenalty } from './functions/Update'
 import StartModal from './modals/StartModal'
 import {
@@ -17,19 +16,18 @@ function getInitialBars() {
   const stored = localStorage.getItem('barValues');
   if (stored) {
     try {
-      const { energy, health, thirst, hunger, sanity } = JSON.parse(stored);
+      const { energy, health, thirst, hunger } = JSON.parse(stored);
       if (
         typeof energy === 'number' &&
         typeof health === 'number' &&
         typeof thirst === 'number' &&
-        typeof hunger === 'number' &&
-        typeof sanity === 'number'
+        typeof hunger === 'number'
       ) {
-        return { energy, health, thirst, hunger, sanity };
+        return { energy, health, thirst, hunger };
       }
     } catch {}
   }
-  return { energy: 10, health: 10, thirst: 10, hunger: 10, sanity: 10 };
+  return { energy: 10, health: 10, thirst: 10, hunger: 10 };
 }
 
 function App() {
@@ -38,7 +36,6 @@ function App() {
   const [health, setHealth] = useState(() => getInitialBars().health);
   const [thirst, setThirst] = useState(() => getInitialBars().thirst);
   const [hunger, setHunger] = useState(() => getInitialBars().hunger);
-  const [sanity, setSanity] = useState(() => getInitialBars().sanity);
 
   // Countdown timer state
   const [hasStoredDueDate, setHasStoredDueDate] = useState(false)
@@ -53,19 +50,17 @@ function App() {
     const stored = localStorage.getItem('barValues')
     if (stored) {
       try {
-        const { energy, health, thirst, hunger, sanity } = JSON.parse(stored)
+        const { energy, health, thirst, hunger } = JSON.parse(stored)
         if (
           typeof energy === 'number' &&
           typeof health === 'number' &&
           typeof thirst === 'number' &&
-          typeof hunger === 'number' &&
-          typeof sanity === 'number'
+          typeof hunger === 'number'
         ) {
           setEnergy(energy)
           setHealth(health)
           setThirst(thirst)
           setHunger(hunger)
-          setSanity(sanity)
         }
       } catch {}
     }
@@ -75,9 +70,9 @@ function App() {
   useEffect(() => {
     localStorage.setItem(
       'barValues',
-      JSON.stringify({ energy, health, thirst, hunger, sanity })
+      JSON.stringify({ energy, health, thirst, hunger })
     )
-  }, [energy, health, thirst, hunger, sanity])
+  }, [energy, health, thirst, hunger])
 
   // Load stored due date
   useEffect(() => {
@@ -92,20 +87,23 @@ function App() {
   // Status bars effect
   useEffect(() => {
     const interval = setInterval(() => {
+      // Health recovery if all bars are full BEFORE decrement
+      if (energy === 10 && thirst === 10 && hunger === 10) {
+        setHealth(h => Math.min(h + 1, 10))
+      }
       // Decrement bars
-      const newBars = decrementBars({ energy, thirst, hunger, sanity })
+      const newBars = decrementBars({ energy, thirst, hunger })
       setEnergy(newBars.energy)
       setThirst(newBars.thirst)
       setHunger(newBars.hunger)
-      setSanity(newBars.sanity)
       // Health penalty
       const penalty = getHealthPenalty(newBars)
       if (penalty > 0) {
         setHealth(h => Math.max(h - penalty, 0))
       }
-    }, 5000) // Change to 3600000 for 1 hour
+    }, 5000)
     return () => clearInterval(interval)
-  }, [energy, thirst, hunger, sanity])
+  }, [energy, thirst, hunger])
 
   // Countdown effect
   useEffect(() => {
@@ -174,8 +172,7 @@ function App() {
     setHealth(10)
     setThirst(10)
     setHunger(10)
-    setSanity(10)
-    localStorage.setItem('barValues', JSON.stringify({ energy: 10, health: 10, thirst: 10, hunger: 10, sanity: 10 }))
+    localStorage.setItem('barValues', JSON.stringify({ energy: 10, health: 10, thirst: 10, hunger: 10 }))
   }
 
   // Prevent closing of modal
@@ -224,11 +221,10 @@ function App() {
       <div className="flex-[1] p-4 text-white overflow-hidden">
         <div className='flex flex-row h-full'>
           <div className='flex-1 bars-section'>
-            <HealthBar value={health} onFill={() => setHealth(10)} />
+            <HealthBar value={health} />
             <EnergyBar value={energy} onFill={() => setEnergy(10)} />
             <ThirstBar value={thirst} onFill={() => setThirst(10)} />
             <HungerBar value={hunger} onFill={() => setHunger(10)} />
-            <SanityBar value={sanity} onFill={() => setSanity(10)} />
           </div>
           <div className='flex-1 text-center'>
             <p>Time Section</p>

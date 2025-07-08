@@ -2,7 +2,7 @@
   margin: 0 auto;
   padding: 5rem;
   padding-bottom: 0;
-  background-color: oklch(27.8% 0.033 256.848) ;
+  background-color: oklch(27.8% 0.033 256.848);
   font-family: Pixeloid;
 }
 
@@ -16,7 +16,7 @@
 
 .bar-label {
   width: 110px;
-  margin-right: 10px;
+  margin-right: 15px;
   font-size: 1rem;
   letter-spacing: 1px;
   display: flex;
@@ -63,7 +63,6 @@
 .bar-container:has(.bar-label:contains('HEALTH')) .bar-segment.filled { background: #e74c3c; }
 .bar-container:has(.bar-label:contains('THIRST')) .bar-segment.filled { background: #3498db; }
 .bar-container:has(.bar-label:contains('HUNGER')) .bar-segment.filled { background: #f1c40f; }
-.bar-container:has(.bar-label:contains('SANITY')) .bar-segment.filled { background: #9b59b6; }
 
 /* fallback for browsers without :has() */
 .bar-segment.filled { background: #6cf; }
