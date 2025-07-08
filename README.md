@@ -10,11 +10,11 @@ By gamifying self-care, StudyStride makes wellbeing fun and rewarding!
 
 Contributors
 - 
-Joshua Kotake
+Kazuhide J Kotake
 
 Kenny Tsai
 
-Jerry Z. Zhang
+Jerry Z Zhang
 
 Leon Sun
 
