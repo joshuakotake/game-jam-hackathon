@@ -13,13 +13,32 @@ import {
   formatTimeLeft
 } from './utils/timeUtils'
 
+function getInitialBars() {
+  const stored = localStorage.getItem('barValues');
+  if (stored) {
+    try {
+      const { energy, health, thirst, hunger, sanity } = JSON.parse(stored);
+      if (
+        typeof energy === 'number' &&
+        typeof health === 'number' &&
+        typeof thirst === 'number' &&
+        typeof hunger === 'number' &&
+        typeof sanity === 'number'
+      ) {
+        return { energy, health, thirst, hunger, sanity };
+      }
+    } catch {}
+  }
+  return { energy: 10, health: 10, thirst: 10, hunger: 10, sanity: 10 };
+}
+
 function App() {
   // Status bars state
-  const [energy, setEnergy] = useState(10)
-  const [health, setHealth] = useState(10)
-  const [thirst, setThirst] = useState(10)
-  const [hunger, setHunger] = useState(10)
-  const [sanity, setSanity] = useState(10)
+  const [energy, setEnergy] = useState(() => getInitialBars().energy);
+  const [health, setHealth] = useState(() => getInitialBars().health);
+  const [thirst, setThirst] = useState(() => getInitialBars().thirst);
+  const [hunger, setHunger] = useState(() => getInitialBars().hunger);
+  const [sanity, setSanity] = useState(() => getInitialBars().sanity);
 
   // Countdown timer state
   const [hasStoredDueDate, setHasStoredDueDate] = useState(false)
@@ -28,6 +47,37 @@ function App() {
   const [dueDateInput, setDueDateInput] = useState('')
   const [dateMissing, setDateMissing] = useState(false)
   const [dateInvalid, setDateInvalid] = useState(false)
+
+  // Load bar values from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem('barValues')
+    if (stored) {
+      try {
+        const { energy, health, thirst, hunger, sanity } = JSON.parse(stored)
+        if (
+          typeof energy === 'number' &&
+          typeof health === 'number' &&
+          typeof thirst === 'number' &&
+          typeof hunger === 'number' &&
+          typeof sanity === 'number'
+        ) {
+          setEnergy(energy)
+          setHealth(health)
+          setThirst(thirst)
+          setHunger(hunger)
+          setSanity(sanity)
+        }
+      } catch {}
+    }
+  }, [])
+
+  // Save bar values to localStorage whenever they change
+  useEffect(() => {
+    localStorage.setItem(
+      'barValues',
+      JSON.stringify({ energy, health, thirst, hunger, sanity })
+    )
+  }, [energy, health, thirst, hunger, sanity])
 
   // Load stored due date
   useEffect(() => {
@@ -119,6 +169,13 @@ function App() {
     setDueDateInput('')
     setHasStoredDueDate(false)
     setShowStartModal(true)
+    // Reset all bars to 10 and update localStorage
+    setEnergy(10)
+    setHealth(10)
+    setThirst(10)
+    setHunger(10)
+    setSanity(10)
+    localStorage.setItem('barValues', JSON.stringify({ energy: 10, health: 10, thirst: 10, hunger: 10, sanity: 10 }))
   }
 
   // Prevent closing of modal
