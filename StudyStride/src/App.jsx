@@ -23,7 +23,9 @@ function getInitialBars() {
       ) {
         return { energy, health, thirst, hunger };
       }
-    } catch {}
+    } catch {
+      console.log("Error getting inital bar")
+    }
   }
   return { energy: 10, health: 10, thirst: 10, hunger: 10 };
 }
@@ -51,7 +53,7 @@ function App() {
   // Reset Modal
   const [showResetModal, setShowResetModal] = useState(false)
 
-  // Load stored due date
+  // Load stored bar values
   useEffect(() => {
     const stored = localStorage.getItem('barValues');
     if (stored) {
@@ -68,7 +70,9 @@ function App() {
           setThirst(thirst);
           setHunger(hunger);
         }
-      } catch {}
+      } catch {
+        console.log("Error getting local storage due date")
+      }
     }
   }, []);
 
