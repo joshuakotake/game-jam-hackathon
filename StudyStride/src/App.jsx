@@ -7,6 +7,7 @@ import HungerBar from './bars/HungerBar';
 import { decrementBars, getHealthPenalty } from './functions/Update';
 import StartModal from './modals/StartModal';
 import { isDueDateValid, formatDueDate, formatTimeLeft } from './utils/timeUtils';
+import ResetModal from './modals/ResetModal'
 
 function getInitialBars() {
   const stored = localStorage.getItem('barValues');
@@ -36,15 +37,20 @@ function App() {
   const [thirst, setThirst] = useState(() => getInitialBars().thirst);
   const [hunger, setHunger] = useState(() => getInitialBars().hunger);
 
-  // Countdown timer state
-  const [hasStoredDueDate, setHasStoredDueDate] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(0);
-  const [showStartModal, setShowStartModal] = useState(true);
-  const [dueDateInput, setDueDateInput] = useState('');
-  const [dateMissing, setDateMissing] = useState(false);
-  const [dateInvalid, setDateInvalid] = useState(false);
+  // Count down timer
+  const [hasStoredDueDate, setHasStoredDueDate] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(0)
 
-  // Load bar values from localStorage on mount
+  // Start Game
+  const [showStartModal, setShowStartModal] = useState(true)
+  const [dueDateInput, setDueDateInput] = useState('')
+  const [dateMissing, setDateMissing] = useState(false)
+  const [dateInvalid, setDateInvalid] = useState(false)
+
+  // Reset Modal
+  const [showResetModal, setShowResetModal] = useState(false)
+
+  // Load stored due date
   useEffect(() => {
     const stored = localStorage.getItem('barValues');
     if (stored) {
@@ -184,7 +190,7 @@ function App() {
         </p>
         {hasStoredDueDate && (
           <button
-            onClick={resetGame}
+            onClick={() => setShowResetModal(true)}
             className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 transition"
             title="Reset Game"
           >
@@ -222,6 +228,15 @@ function App() {
           dateMissing={dateMissing}
           dateInvalid={dateInvalid}
           onSubmit={startGame}
+        />
+      )}
+      {showResetModal && (
+        <ResetModal
+          onConfirm={() => {
+            resetGame();
+            setShowResetModal(false);
+          }}
+          onCancel={() => setShowResetModal(false)}
         />
       )}
     </div>
