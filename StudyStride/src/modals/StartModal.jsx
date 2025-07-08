@@ -30,7 +30,7 @@ export default function StartModal({ dueDate, setDueDate, dateMissing, dateInval
           )}
 
           {dateInvalid && (
-            <p className="mt-2 text-sm text-red-600">Due Date has to be more than 24 hours from now</p>
+           <p className="mt-2 text-sm text-red-600">Due Date has to be more 24 hours from now</p>
           )}
 
           <div className="mt-6 flex justify-end">
