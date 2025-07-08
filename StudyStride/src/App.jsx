@@ -6,14 +6,40 @@ import ThirstBar from './bars/ThirstBar'
 import HungerBar from './bars/HungerBar'
 import SanityBar from './bars/SanityBar'
 import { decrementBars, getHealthPenalty } from './functions/Update'
+import StartModal from './modals/StartModal'
+import {
+  isDueDateValid,
+  formatDueDate,
+  formatTimeLeft
+} from './utils/timeUtils'
 
 function App() {
+  // Status bars state
   const [energy, setEnergy] = useState(10)
   const [health, setHealth] = useState(10)
   const [thirst, setThirst] = useState(10)
   const [hunger, setHunger] = useState(10)
   const [sanity, setSanity] = useState(10)
 
+  // Countdown timer state
+  const [hasStoredDueDate, setHasStoredDueDate] = useState(false)
+  const [timeLeft, setTimeLeft] = useState(0)
+  const [showStartModal, setShowStartModal] = useState(true)
+  const [dueDateInput, setDueDateInput] = useState('')
+  const [dateMissing, setDateMissing] = useState(false)
+  const [dateInvalid, setDateInvalid] = useState(false)
+
+  // Load stored due date
+  useEffect(() => {
+    const storedDueDate = localStorage.getItem('dueDate')
+    if (storedDueDate) {
+      setHasStoredDueDate(true)
+      setDueDateInput(storedDueDate)
+      setShowStartModal(false)
+    }
+  }, [])
+
+  // Status bars effect
   useEffect(() => {
     const interval = setInterval(() => {
       // Decrement bars
@@ -22,7 +48,7 @@ function App() {
       setThirst(newBars.thirst)
       setHunger(newBars.hunger)
       setSanity(newBars.sanity)
-      // Health penalty: check every tick and decrease accordingly
+      // Health penalty
       const penalty = getHealthPenalty(newBars)
       if (penalty > 0) {
         setHealth(h => Math.max(h - penalty, 0))
@@ -31,10 +57,88 @@ function App() {
     return () => clearInterval(interval)
   }, [energy, thirst, hunger, sanity])
 
+  // Countdown effect
+  useEffect(() => {
+    if (!hasStoredDueDate || !dueDateInput) return
+  
+    const updateCountdown = () => {
+      const now = new Date()
+      const end = new Date(dueDateInput)
+      const difference = end - now
+      setTimeLeft(difference > 0 ? difference : 0)
+    }
+    updateCountdown()
+    
+    const interval = setInterval(updateCountdown, 1000)
+  
+    return () => clearInterval(interval)
+  }, [hasStoredDueDate, dueDateInput])
+
+  // Start Game
+  const startGame = () => {
+    setDateMissing(false)
+    setDateInvalid(false)
+  
+    if (!dueDateInput.trim()) {
+      setDateMissing(true)
+      return
+    }
+  
+    if (!isDueDateValid(dueDateInput)) {
+      setDateInvalid(true)
+      return
+    }
+
+    localStorage.setItem('dueDate', dueDateInput)
+    setShowStartModal(false)
+    setHasStoredDueDate(true)
+  }
+  
+  // Reset Game
+  const resetGame = () => {
+    localStorage.removeItem('dueDate')
+    setDueDateInput('')
+    setHasStoredDueDate(false)
+    setShowStartModal(true)
+  }
+
+  // Prevent closing of modal
+  useEffect(() => {
+    const preventEscape = (e) => {
+      if (e.key === 'Escape') {
+        e.preventDefault()
+      }
+    }
+    window.addEventListener('keydown', preventEscape)
+    return () => window.removeEventListener('keydown', preventEscape)
+  }, [])
+
   return (
     <div className="flex flex-col h-screen bg-gray-800">
       <div className="flex-[1] bg-gray-200 p-4 overflow-hidden">
         <h1 className="flex justify-center text-xl">Game Section</h1>
+        <p className="text-center mt-2 text-sm text-gray-600">
+          {hasStoredDueDate
+            ? `Stored Due Date: ${formatDueDate(dueDateInput)}`
+            : 'No due date saved yet.'}
+        </p>
+        <p className="text-center mt-2 text-sm text-gray-600">
+          Time Left: {formatTimeLeft(timeLeft)}
+        </p>
+        {hasStoredDueDate && (
+          <button
+            onClick={resetGame}
+            className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 transition"
+            title="Reset Game"
+          >
+            <img
+              src="/src/assets/pixelart/ResetIcon.svg"
+              alt="Reset Icon"
+              width={20}
+              height={20}
+            />
+          </button>
+        )}
       </div>
       
       <div className="flex-[1] p-4 text-white overflow-hidden">
@@ -50,8 +154,16 @@ function App() {
             <p>Time Section</p>
           </div>
         </div>
-        
       </div>
+      {showStartModal && (
+        <StartModal
+          dueDate={dueDateInput}
+          setDueDate={setDueDateInput}
+          dateMissing={dateMissing}
+          dateInvalid={dateInvalid}
+          onSubmit={startGame}
+        />
+      )}
     </div>
   )
 }

@@ -1,4 +1,11 @@
-/* Use Pixeloid font for retro look */
+#root {
+  margin: 0 auto;
+  padding: 5rem;
+  padding-bottom: 0;
+  background-color: oklch(27.8% 0.033 256.848) ;
+  font-family: Pixeloid;
+}
+
 .bar-container {
   display: flex;
   align-items: center;
