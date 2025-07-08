@@ -1,193 +1,174 @@
-import { useState, useEffect } from 'react'
-import './App.css'
-import EnergyBar from './bars/EnergyBar'
-import HealthBar from './bars/HealthBar'
-import ThirstBar from './bars/ThirstBar'
-import HungerBar from './bars/HungerBar'
-import SanityBar from './bars/SanityBar'
-import { decrementBars, getHealthPenalty } from './functions/Update'
-import StartModal from './modals/StartModal'
-import {
-  isDueDateValid,
-  formatDueDate,
-  formatTimeLeft
-} from './utils/timeUtils'
+import { useState, useEffect } from 'react';
+import './App.css';
+import EnergyBar from './bars/EnergyBar';
+import HealthBar from './bars/HealthBar';
+import ThirstBar from './bars/ThirstBar';
+import HungerBar from './bars/HungerBar';
+import { decrementBars, getHealthPenalty } from './functions/Update';
+import StartModal from './modals/StartModal';
+import { isDueDateValid, formatDueDate, formatTimeLeft } from './utils/timeUtils';
 
 function getInitialBars() {
   const stored = localStorage.getItem('barValues');
   if (stored) {
     try {
-      const { energy, health, thirst, hunger, sanity } = JSON.parse(stored);
+      const { energy, health, thirst, hunger } = JSON.parse(stored);
       if (
         typeof energy === 'number' &&
         typeof health === 'number' &&
         typeof thirst === 'number' &&
-        typeof hunger === 'number' &&
-        typeof sanity === 'number'
+        typeof hunger === 'number'
       ) {
-        return { energy, health, thirst, hunger, sanity };
+        return { energy, health, thirst, hunger };
       }
     } catch {}
   }
-  return { energy: 10, health: 10, thirst: 10, hunger: 10, sanity: 10 };
+  return { energy: 10, health: 10, thirst: 10, hunger: 10 };
 }
 
 function App() {
+  // Game Status
+  const [gameStarted, setGameStarted] = useState(false);
+
   // Status bars state
   const [energy, setEnergy] = useState(() => getInitialBars().energy);
   const [health, setHealth] = useState(() => getInitialBars().health);
   const [thirst, setThirst] = useState(() => getInitialBars().thirst);
   const [hunger, setHunger] = useState(() => getInitialBars().hunger);
-  const [sanity, setSanity] = useState(() => getInitialBars().sanity);
 
   // Countdown timer state
-  const [hasStoredDueDate, setHasStoredDueDate] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(0)
-  const [showStartModal, setShowStartModal] = useState(true)
-  const [dueDateInput, setDueDateInput] = useState('')
-  const [dateMissing, setDateMissing] = useState(false)
-  const [dateInvalid, setDateInvalid] = useState(false)
+  const [hasStoredDueDate, setHasStoredDueDate] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [showStartModal, setShowStartModal] = useState(true);
+  const [dueDateInput, setDueDateInput] = useState('');
+  const [dateMissing, setDateMissing] = useState(false);
+  const [dateInvalid, setDateInvalid] = useState(false);
 
   // Load bar values from localStorage on mount
   useEffect(() => {
-    const stored = localStorage.getItem('barValues')
+    const stored = localStorage.getItem('barValues');
     if (stored) {
       try {
-        const { energy, health, thirst, hunger, sanity } = JSON.parse(stored)
+        const { energy, health, thirst, hunger } = JSON.parse(stored);
         if (
           typeof energy === 'number' &&
           typeof health === 'number' &&
           typeof thirst === 'number' &&
-          typeof hunger === 'number' &&
-          typeof sanity === 'number'
+          typeof hunger === 'number'
         ) {
-          setEnergy(energy)
-          setHealth(health)
-          setThirst(thirst)
-          setHunger(hunger)
-          setSanity(sanity)
+          setEnergy(energy);
+          setHealth(health);
+          setThirst(thirst);
+          setHunger(hunger);
         }
       } catch {}
     }
-  }, [])
+  }, []);
 
   // Save bar values to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem(
       'barValues',
-      JSON.stringify({ energy, health, thirst, hunger, sanity })
-    )
-  }, [energy, health, thirst, hunger, sanity])
+      JSON.stringify({ energy, health, thirst, hunger })
+    );
+  }, [energy, health, thirst, hunger]);
 
-  // Load stored due date
+  // Load stored due date and set game as started if exists
   useEffect(() => {
-    const storedDueDate = localStorage.getItem('dueDate')
+    const storedDueDate = localStorage.getItem('dueDate');
     if (storedDueDate) {
-      setHasStoredDueDate(true)
-      setDueDateInput(storedDueDate)
-      setShowStartModal(false)
+      setHasStoredDueDate(true);
+      setDueDateInput(storedDueDate);
+      setShowStartModal(false);
+      setGameStarted(true);
     }
-  }, [])
+  }, []);
 
-  // Status bars effect
+  // Status bars effect - only runs when gameStarted is true
   useEffect(() => {
+    if (!gameStarted) return;
+    
     const interval = setInterval(() => {
       // Decrement bars
-      const newBars = decrementBars({ energy, thirst, hunger, sanity })
-      setEnergy(newBars.energy)
-      setThirst(newBars.thirst)
-      setHunger(newBars.hunger)
-      setSanity(newBars.sanity)
+      const newBars = decrementBars({ energy, thirst, hunger });
+      setEnergy(newBars.energy);
+      setThirst(newBars.thirst);
+      setHunger(newBars.hunger);
+
       // Health penalty
-      const penalty = getHealthPenalty(newBars)
+      const penalty = getHealthPenalty(newBars);
       if (penalty > 0) {
-        setHealth(h => Math.max(h - penalty, 0))
+        setHealth(h => Math.max(h - penalty, 0));
       }
-    }, 5000) // Change to 3600000 for 1 hour
-    return () => clearInterval(interval)
-  }, [energy, thirst, hunger, sanity])
+    }, 5000); // Change to 3600000 for 1 hour
+    
+    return () => clearInterval(interval);
+  }, [energy, thirst, hunger, gameStarted]);
 
   // Countdown effect
   useEffect(() => {
-    if (!hasStoredDueDate || !dueDateInput) return
+    if (!hasStoredDueDate || !dueDateInput) return;
   
     const updateCountdown = () => {
-      const now = new Date()
-      const end = new Date(dueDateInput)
-      const difference = end - now
-      setTimeLeft(difference > 0 ? difference : 0)
-    }
-    updateCountdown()
+      const now = new Date();
+      const end = new Date(dueDateInput);
+      const difference = end - now;
+      setTimeLeft(difference > 0 ? difference : 0);
+    };
+    updateCountdown();
     
-    const interval = setInterval(updateCountdown, 1000)
+    const interval = setInterval(updateCountdown, 1000);
   
-    return () => clearInterval(interval)
-  }, [hasStoredDueDate, dueDateInput])
+    return () => clearInterval(interval);
+  }, [hasStoredDueDate, dueDateInput]);
 
   // Start Game
   const startGame = () => {
-    setDateMissing(false)
-    setDateInvalid(false)
+    setDateMissing(false);
+    setDateInvalid(false);
   
     if (!dueDateInput.trim()) {
-      setDateMissing(true)
-      return
+      setDateMissing(true);
+      return;
     }
   
     if (!isDueDateValid(dueDateInput)) {
-      setDateInvalid(true)
-      return
+      setDateInvalid(true);
+      return;
     }
 
-    localStorage.setItem('dueDate', dueDateInput)
-    setShowStartModal(false)
-    setHasStoredDueDate(true)
-  }
-  
-  // Countdown effect
-  useEffect(() => {
-    if (!hasStoredDueDate || !dueDateInput) return
-
-    const updateCountdown = () => {
-      const now = new Date()
-      const end = new Date(dueDateInput)
-      if (isNaN(end)) return
-      const difference = end - now
-      setTimeLeft(difference > 0 ? difference : 0)
-    }
-
-    updateCountdown()
-
-    const interval = setInterval(updateCountdown, 1000)
-
-    return () => clearInterval(interval)
-  }, [hasStoredDueDate, dueDateInput])
+    localStorage.setItem('dueDate', dueDateInput);
+    setShowStartModal(false);
+    setHasStoredDueDate(true);
+    setGameStarted(true);
+  };
 
   // Reset Game
   const resetGame = () => {
-    localStorage.removeItem('dueDate')
-    setDueDateInput('')
-    setHasStoredDueDate(false)
-    setShowStartModal(true)
+    localStorage.removeItem('dueDate');
+    setDueDateInput('');
+    setHasStoredDueDate(false);
+    setShowStartModal(true);
+    setGameStarted(false);
+    
     // Reset all bars to 10 and update localStorage
-    setEnergy(10)
-    setHealth(10)
-    setThirst(10)
-    setHunger(10)
-    setSanity(10)
-    localStorage.setItem('barValues', JSON.stringify({ energy: 10, health: 10, thirst: 10, hunger: 10, sanity: 10 }))
-  }
+    setEnergy(10);
+    setHealth(10);
+    setThirst(10);
+    setHunger(10);
+    localStorage.setItem('barValues', JSON.stringify({ energy: 10, health: 10, thirst: 10, hunger: 10 }));
+  };
 
   // Prevent closing of modal
   useEffect(() => {
     const preventEscape = (e) => {
       if (e.key === 'Escape') {
-        e.preventDefault()
+        e.preventDefault();
       }
-    }
-    window.addEventListener('keydown', preventEscape)
-    return () => window.removeEventListener('keydown', preventEscape)
-  }, [])
+    };
+    window.addEventListener('keydown', preventEscape);
+    return () => window.removeEventListener('keydown', preventEscape);
+  }, []);
 
   return (
     <div className="flex flex-col h-screen bg-gray-800">
@@ -228,7 +209,6 @@ function App() {
             <EnergyBar value={energy} onFill={() => setEnergy(10)} />
             <ThirstBar value={thirst} onFill={() => setThirst(10)} />
             <HungerBar value={hunger} onFill={() => setHunger(10)} />
-            <SanityBar value={sanity} onFill={() => setSanity(10)} />
           </div>
           <div className='flex-1 text-center'>
             <p>Time Section</p>
@@ -245,7 +225,7 @@ function App() {
         />
       )}
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
