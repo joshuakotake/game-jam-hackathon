@@ -1,10 +1,10 @@
 import React from 'react';
 
-const HungerBar = ({ value = 0, onFill }) => {
+const SanityBar = ({ value = 0, onFill }) => {
   return (
     <div className="bar-container">
       <span className="bar-label">
-        <button className="bar-emoji-btn" onClick={onFill}>🍗</button> HUNGER
+        <button className="bar-emoji-btn" onClick={onFill}>🧠</button> SANITY
       </span>
       <div className="bar-segments">
         {[...Array(10)].map((_, i) => (
@@ -15,4 +15,4 @@ const HungerBar = ({ value = 0, onFill }) => {
   );
 };
 
-export default HungerBar;
+export default SanityBar; 
