@@ -6,9 +6,10 @@ import ThirstBar from './bars/ThirstBar';
 import HungerBar from './bars/HungerBar';
 import { decrementBars, getHealthPenalty } from './functions/Update';
 import StartModal from './modals/StartModal';
-import { isDueDateValid, formatDueDate, formatTimeLeft } from './utils/timeUtils';
+import { isDueDateValid, formatDueDate } from './utils/timeUtils';
 import ResetModal from './modals/ResetModal'
 import ProgressBar from './bars/ProgressBar';
+import PauseModal from './modals/PauseModal';
 
 function getInitialBars() {
   const stored = localStorage.getItem('barValues');
@@ -33,6 +34,7 @@ function getInitialBars() {
 function App() {
   // Game Status
   const [gameStarted, setGameStarted] = useState(false);
+  const [gamePaused, setGamePaused] = useState(false);
 
   // Status bars state
   const [energy, setEnergy] = useState(() => getInitialBars().energy);
@@ -97,28 +99,27 @@ function App() {
 
   // Status bars effect - only runs when gameStarted is true
   useEffect(() => {
-    if (!gameStarted) return;
+    if (!gameStarted || gamePaused) return;
     
     const interval = setInterval(() => {
-      // Health recovery if all bars are full before decrement
-      if (energy === 10 && thirst === 10 && hunger === 10) {
-        setHealth(h => Math.min(h + 1, 10))
-      }
-      // Decrement bars
-      const newBars = decrementBars({ energy, thirst, hunger });
+      // Only decrement if not paused
+      const newBars = gamePaused ? 
+        { energy, thirst, hunger } : 
+        decrementBars({ energy, thirst, hunger });
+      
       setEnergy(newBars.energy);
       setThirst(newBars.thirst);
       setHunger(newBars.hunger);
-
-      // Health penalty
-      const penalty = getHealthPenalty(newBars);
+  
+      // Only apply penalty if not paused
+      const penalty = gamePaused ? 0 : getHealthPenalty(newBars);
       if (penalty > 0) {
         setHealth(h => Math.max(h - penalty, 0));
       }
-    }, 5000); // Change to 3600000 for 1 hour
+    }, 5000);
     
     return () => clearInterval(interval);
-  }, [energy, thirst, hunger, gameStarted]);
+  }, [energy, thirst, hunger, gameStarted, gamePaused]);
 
   // Countdown effect
   useEffect(() => {
@@ -186,51 +187,69 @@ function App() {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen bg-gray-800">
-      {hasStoredDueDate && <ProgressBar dueDate={dueDateInput} />}
-      <div className="flex-[1] bg-gray-200 p-4 overflow-hidden">
-        <h1 className="flex justify-center text-xl">Game Section</h1>
-        <p className="text-center mt-2 text-sm text-gray-600">
-          {hasStoredDueDate
-            ? `Stored Due Date: ${formatDueDate(dueDateInput)}`
-            : 'No due date saved yet.'}
-        </p>
-        <p className="text-center mt-2 text-sm text-gray-600">
-          {timeLeft > 0 ? `Time Left: ${formatTimeLeft(timeLeft)}` : "Time is up!"}
-        </p>
-        {hasStoredDueDate && (
-          <button
-            onClick={() => setShowResetModal(true)}
-            className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 transition"
-            title="Reset Game"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 -0.5 9 9"
-              shapeRendering="crispEdges"
-              width="20"
-              height="20"
+    <div className="flex flex-col h-screen bg-gray-800 max-w-4xl mx-auto">
+      {/* Header */}
+      <div className="min-h-20 mb-1 bg-gray-800 flex flex-col justify-center relative">
+        <div className="px-4 text-center text-white">
+          <h1 className="text-xl font-bold">StudyStride</h1>
+          <div className="mt-1">
+            <p className="text-sm">
+              {hasStoredDueDate
+                ? formatDueDate(dueDateInput)
+                : 'No due date saved yet.'}
+            </p>
+          </div>
+        </div>
+        
+        {/* Action Buttons */}
+        {hasStoredDueDate && !showStartModal && (
+          <div className="absolute top-1/2 transform -translate-y-1/2 flex justify-between w-full px-4">
+            <button
+              onClick={() => setGamePaused(true)}
+              className="p-2 rounded-full hover:bg-gray-700 transition"
+              title="Pause Game"
             >
-              <metadata>Made with Pixels to Svg https://codepen.io/shshaw/pen/XbxvNj</metadata>
-              <path stroke="#ffffff" d="M0 0h1M3 0h3M0 1h1M2 1h1M6 1h1M0 2h2M7 2h1M0 3h4M8 3h1M8 4h1M0 5h1M8 5h1M1 6h1M7 6h1M2 7h1M6 7h1M3 8h3" />
-            </svg>
-          </button>
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="white">
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+              </svg>
+            </button>
+            <button
+              onClick={() => setShowResetModal(true)}
+              className="p-2 rounded-full hover:bg-gray-700 transition"
+              title="Reset Game"
+            >
+              <svg className="w-5 h-5" viewBox="0 -0.5 9 9" shapeRendering="crispEdges">
+                <path stroke="white" d="M0 0h1M3 0h3M0 1h1M2 1h1M6 1h1M0 2h2M7 2h1M0 3h4M8 3h1M8 4h1M0 5h1M8 5h1M1 6h1M7 6h1M2 7h1M6 7h1M3 8h3" />
+              </svg>
+            </button>
+          </div>
         )}
       </div>
-      
-      <div className="flex-[1] p-4 text-white overflow-hidden">
-        <div className='flex flex-row h-full'>
-          <div className='flex-1 bars-section'>
+
+      {/* Progress Bar */}
+      {hasStoredDueDate && (
+        <div className='mx-2'>
+          <ProgressBar dueDate={dueDateInput} />
+        </div>
+      )}
+
+      {/* Game Container */}
+      <div className="flex-1 min-h-[320px] max-h-[520px] bg-gray-200 overflow-hidden mx-2"></div>
+
+      {/* Stats Container - Responsive bars */}
+      <div className="py-4 text-white">
+        <div className="flex flex-col h-full items-center">
+          <p className="text-center pb-2">Current Stats:</p>
+          <div className="flex-1 grid grid-cols-1">
             <HealthBar value={health} />
             <EnergyBar value={energy} onFill={() => setEnergy(10)} />
             <ThirstBar value={thirst} onFill={() => setThirst(10)} />
             <HungerBar value={hunger} onFill={() => setHunger(10)} />
           </div>
-          <div className='flex-1 text-center'>
-            <p>Time Section</p>
-          </div>
         </div>
       </div>
+
+      {/* Modals */}
       {showStartModal && (
         <StartModal
           dueDate={dueDateInput}
@@ -248,6 +267,9 @@ function App() {
           }}
           onCancel={() => setShowResetModal(false)}
         />
+      )}
+      {gamePaused && (
+        <PauseModal onResume={() => setGamePaused(false)} />
       )}
     </div>
   );

@@ -1,7 +1,5 @@
 #root {
   margin: 0 auto;
-  padding: 5rem;
-  padding-bottom: 0;
   background-color: oklch(27.8% 0.033 256.848);
   font-family: Pixeloid;
 }
@@ -59,21 +57,20 @@
 }
 
 /* Color for each bar type */
-.bar-container:has(.bar-label:contains('ENERGY')) .bar-segment.filled { background: #6cf; }
-.bar-container:has(.bar-label:contains('HEALTH')) .bar-segment.filled { background: #e74c3c; }
-.bar-container:has(.bar-label:contains('THIRST')) .bar-segment.filled { background: #3498db; }
-.bar-container:has(.bar-label:contains('HUNGER')) .bar-segment.filled { background: #f1c40f; }
+.bar-container:has(.bar-label:contains("ENERGY")) .bar-segment.filled {
+  background: #6cf;
+}
+.bar-container:has(.bar-label:contains("HEALTH")) .bar-segment.filled {
+  background: #e74c3c;
+}
+.bar-container:has(.bar-label:contains("THIRST")) .bar-segment.filled {
+  background: #3498db;
+}
+.bar-container:has(.bar-label:contains("HUNGER")) .bar-segment.filled {
+  background: #f1c40f;
+}
 
 /* fallback for browsers without :has() */
-.bar-segment.filled { background: #6cf; }
-
-/* Center bars in bottom left */
-.bars-section {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  height: 100%;
-  width: 100%;
-  padding-left: 40px;
+.bar-segment.filled {
+  background: #6cf;
 }
