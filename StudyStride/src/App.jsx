@@ -8,6 +8,7 @@ import { decrementBars, getHealthPenalty } from './functions/Update';
 import StartModal from './modals/StartModal';
 import { isDueDateValid, formatDueDate, formatTimeLeft } from './utils/timeUtils';
 import ResetModal from './modals/ResetModal'
+import ProgressBar from './bars/ProgressBar';
 
 function getInitialBars() {
   const stored = localStorage.getItem('barValues');
@@ -151,12 +152,12 @@ function App() {
 
   // Reset Game
   const resetGame = () => {
-    localStorage.removeItem('dueDate');
-    setDueDateInput('');
-    setHasStoredDueDate(false);
-    setShowStartModal(true);
+    localStorage.removeItem('dueDate')
+    localStorage.removeItem('assignmentStartTime')
+    setDueDateInput('')
+    setHasStoredDueDate(false)
+    setShowStartModal(true)
     setGameStarted(false);
-    
     // Reset all bars to 10 and update localStorage
     setEnergy(10);
     setHealth(10);
@@ -178,6 +179,7 @@ function App() {
 
   return (
     <div className="flex flex-col h-screen bg-gray-800">
+      {hasStoredDueDate && <ProgressBar dueDate={dueDateInput} />}
       <div className="flex-[1] bg-gray-200 p-4 overflow-hidden">
         <h1 className="flex justify-center text-xl">Game Section</h1>
         <p className="text-center mt-2 text-sm text-gray-600">
