@@ -384,7 +384,7 @@ function App() {
             right: 0,
             bottom: 0,
             width: '100%',
-            height: '36.6%',
+            height: '37%',
             zIndex: 0,
             overflow: 'hidden',
           }}
