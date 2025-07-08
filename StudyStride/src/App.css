@@ -1,7 +1,7 @@
 #root {
   margin: 0 auto;
   background-color: oklch(27.8% 0.033 256.848);
-  font-family: Pixeloid;
+  font-family: Pixeloid, monospace, cursive;
 }
 
 .bar-container {
@@ -40,37 +40,4 @@
 .bar-emoji-btn:active {
   background: #666;
   transform: scale(0.95);
-}
-
-.bar-segments {
-  display: flex;
-  gap: 4px;
-}
-
-.bar-segment {
-  width: 30px;
-  height: 20px;
-  border: 2px solid #222;
-  background: #eee;
-  box-sizing: border-box;
-  image-rendering: pixelated;
-}
-
-/* Color for each bar type */
-.bar-container:has(.bar-label:contains("ENERGY")) .bar-segment.filled {
-  background: #6cf;
-}
-.bar-container:has(.bar-label:contains("HEALTH")) .bar-segment.filled {
-  background: #e74c3c;
-}
-.bar-container:has(.bar-label:contains("THIRST")) .bar-segment.filled {
-  background: #3498db;
-}
-.bar-container:has(.bar-label:contains("HUNGER")) .bar-segment.filled {
-  background: #f1c40f;
-}
-
-/* fallback for browsers without :has() */
-.bar-segment.filled {
-  background: #6cf;
 }

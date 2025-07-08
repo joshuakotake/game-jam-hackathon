@@ -4,12 +4,13 @@ import EnergyBar from './bars/EnergyBar';
 import HealthBar from './bars/HealthBar';
 import ThirstBar from './bars/ThirstBar';
 import HungerBar from './bars/HungerBar';
-import { decrementBars, getHealthPenalty } from './functions/Update';
+import { decrementBars, getHealthPenalty } from './functions/update';
 import StartModal from './modals/StartModal';
 import { isDueDateValid, formatDueDate } from './utils/timeUtils';
 import ResetModal from './modals/ResetModal'
 import ProgressBar from './bars/ProgressBar';
 import PauseModal from './modals/PauseModal';
+import RestModal from './modals/RestModal';
 
 function getInitialBars() {
   const stored = localStorage.getItem('barValues');
@@ -55,6 +56,10 @@ function App() {
   // Reset Modal
   const [showResetModal, setShowResetModal] = useState(false)
 
+  // Rest Modal
+  const [showRestModal, setShowRestModal] = useState(false);
+  const [currentActivity, setCurrentActivity] = useState(null);
+
   // Load stored bar values
   useEffect(() => {
     const stored = localStorage.getItem('barValues');
@@ -97,12 +102,11 @@ function App() {
     }
   }, []);
 
-  // Status bars effect - only runs when gameStarted is true
+  // Status bars effect
   useEffect(() => {
     if (!gameStarted || gamePaused) return;
     
     const interval = setInterval(() => {
-      // Only decrement if not paused
       const newBars = gamePaused ? 
         { energy, thirst, hunger } : 
         decrementBars({ energy, thirst, hunger });
@@ -111,10 +115,11 @@ function App() {
       setThirst(newBars.thirst);
       setHunger(newBars.hunger);
   
-      // Only apply penalty if not paused
       const penalty = gamePaused ? 0 : getHealthPenalty(newBars);
       if (penalty > 0) {
-        setHealth(h => Math.max(h - penalty, 0));
+        setHealth(h => Math.max(h - penalty, 1));
+      } else if (!gamePaused && energy === 10 && thirst === 10 && hunger === 10) {
+        setHealth(h => Math.min(h + 1, 10));
       }
     }, 5000);
     
@@ -174,6 +179,29 @@ function App() {
     setHunger(10);
     localStorage.setItem('barValues', JSON.stringify({ energy: 10, health: 10, thirst: 10, hunger: 10 }));
   };
+
+  // Start Rest Activity
+  const startRestActivity = (activityType) => {
+    setCurrentActivity(activityType);
+    setGamePaused(true);
+    setShowRestModal(true);
+  };
+  
+  // Finish Rest Activity
+  const completeRestActivity = () => {
+    setShowRestModal(false);
+    setGamePaused(false);
+    
+    // Refill the appropriate bar
+    if (currentActivity === 'energy') {
+      setEnergy(10);
+    } else if (currentActivity === 'thirst') {
+      setThirst(10);
+    } else if (currentActivity === 'hunger') {
+      setHunger(10);
+    }
+  };
+  
 
   // Prevent closing of modal
   useEffect(() => {
@@ -242,9 +270,18 @@ function App() {
           <p className="text-center pb-2">Current Stats:</p>
           <div className="flex-1 grid grid-cols-1">
             <HealthBar value={health} />
-            <EnergyBar value={energy} onFill={() => setEnergy(10)} />
-            <ThirstBar value={thirst} onFill={() => setThirst(10)} />
-            <HungerBar value={hunger} onFill={() => setHunger(10)} />
+            <EnergyBar 
+              value={energy} 
+              onFill={() => startRestActivity('energy')} 
+            />
+            <ThirstBar 
+              value={thirst} 
+              onFill={() => startRestActivity('thirst')} 
+            />
+            <HungerBar 
+              value={hunger} 
+              onFill={() => startRestActivity('hunger')} 
+            />
           </div>
         </div>
       </div>
@@ -270,6 +307,12 @@ function App() {
       )}
       {gamePaused && (
         <PauseModal onResume={() => setGamePaused(false)} />
+      )}
+      {showRestModal && (
+        <RestModal 
+          onComplete={completeRestActivity}
+          activityType={currentActivity}
+        />
       )}
     </div>
   );
