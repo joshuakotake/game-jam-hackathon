@@ -49,10 +49,6 @@ export default function RestModal({ onComplete, activityType }) {
     hunger: 'eat some food'
   };
 
-  const initialTime = activityType === 'energy' ? 15 * 60 * 1000 :
-                     activityType === 'thirst' ? 5 * 60 * 1000 :
-                     30 * 60 * 1000;
-
   return (
     <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center" role="dialog" aria-modal="true">
       <div className="w-full max-w-md rounded-xl bg-white shadow-xl p-6">
