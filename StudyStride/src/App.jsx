@@ -4,7 +4,7 @@ import EnergyBar from './bars/EnergyBar';
 import HealthBar from './bars/HealthBar';
 import ThirstBar from './bars/ThirstBar';
 import HungerBar from './bars/HungerBar';
-import { decrementBars, getHealthPenalty } from './functions/update';
+import { getHealthPenalty } from './functions/update';
 import StartModal from './modals/StartModal';
 import { isDueDateValid, formatDueDate } from './utils/timeUtils';
 import ResetModal from './modals/ResetModal'
