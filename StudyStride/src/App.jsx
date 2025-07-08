@@ -100,7 +100,7 @@ function App() {
     if (!gameStarted) return;
     
     const interval = setInterval(() => {
-      // Health recovery if all bars are full BEFORE decrement
+      // Health recovery if all bars are full before decrement
       if (energy === 10 && thirst === 10 && hunger === 10) {
         setHealth(h => Math.min(h + 1, 10))
       }
