@@ -77,3 +77,43 @@
   width: 100%;
   padding-left: 40px;
 }
+
+.ground-scroll {
+  display: flex;
+  width: 200%;
+  height: 100%;
+  animation: ground-scroll 10s linear infinite;
+}
+
+
+.sky-scroll {
+  display: flex;
+  width: 200%;
+  height: 100%;
+  animation: ground-scroll 40s linear infinite;
+}
+
+.ground-scroll svg, .sky-scroll svg {
+  width: 50%;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+
+@keyframes ground-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes sky-scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
