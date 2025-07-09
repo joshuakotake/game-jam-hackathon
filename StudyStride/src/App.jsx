@@ -183,12 +183,18 @@ function App() {
     
     // Health checks every minute
     const healthInterval = setInterval(() => {
-      if (!gamePaused) {
+      if (!gamePaused && !gameEnded) {
         const penalty = getHealthPenalty({ energy, thirst, hunger });
         if (penalty > 0) {
           setHealth(h => {
             const newHealth = Math.max(h - penalty, 1);
             setTotalHealthLost(prev => prev + (h - newHealth));
+
+            if (newHealth === 1) {
+              setGameEnded(true);
+              setShowEndModal(true);
+            }
+            
             return newHealth;
           });
         } else if (energy >= 8 && thirst >= 8 && hunger >= 8) {
@@ -247,7 +253,7 @@ function App() {
     setGameStarted(true);
   };
 
-  // Reset Game
+ // Reset Game
   const resetGame = () => {
     localStorage.removeItem('dueDate')
     localStorage.removeItem('assignmentStartTime')
@@ -258,7 +264,6 @@ function App() {
     setGameStarted(false);
     setGameEnded(false);
     setTotalHealthLost(0);
-    // Reset all bars to 10 and update localStorage
     setEnergy(10);
     setHealth(10);
     setThirst(10);
