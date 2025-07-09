@@ -41,7 +41,7 @@ const EndModal = ({ healthLost, onRestart }) => {
       <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-4 text-gray-800">
-            Task Complete!
+            {rank === 'F' ? 'Task Failed!' : 'Task Complete!'}
           </h2>
           
           <div className="mb-6">

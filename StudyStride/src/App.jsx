@@ -145,7 +145,7 @@ function App() {
           return newValue;
         });
       }
-    }, 6000);
+    }, 1000);
     // 18 * 60 * 1000
     
     // Thirst decrements every 15 minutes
@@ -156,7 +156,7 @@ function App() {
           return newValue;
         });
       }
-    }, 3000);
+    }, 1000);
     // 15 * 60 * 1000
     
     // Hunger decrements every 36 minutes
@@ -167,7 +167,7 @@ function App() {
           return newValue;
         });
       }
-    }, 8000);
+    }, 1000);
     // 36 * 60 * 1000
     
     return () => {
@@ -183,19 +183,25 @@ function App() {
     
     // Health checks every minute
     const healthInterval = setInterval(() => {
-      if (!gamePaused) {
+      if (!gamePaused && !gameEnded) {
         const penalty = getHealthPenalty({ energy, thirst, hunger });
         if (penalty > 0) {
           setHealth(h => {
             const newHealth = Math.max(h - penalty, 1);
             setTotalHealthLost(prev => prev + (h - newHealth));
+
+            if (newHealth === 1) {
+              setGameEnded(true);
+              setShowEndModal(true);
+            }
+
             return newHealth;
           });
         } else if (energy >= 8 && thirst >= 8 && hunger >= 8) {
           setHealth(h => Math.min(h + 1, 10));
         }
       }
-    }, 2000);
+    }, 1000);
     // 60 * 1000
     
     return () => {
@@ -259,7 +265,6 @@ function App() {
     setGameStarted(false);
     setGameEnded(false);
     setTotalHealthLost(0);
-    // Reset all bars to 10 and update localStorage
     setEnergy(10);
     setHealth(10);
     setThirst(10);
