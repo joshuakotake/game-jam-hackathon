@@ -145,7 +145,7 @@ function App() {
           return newValue;
         });
       }
-    }, 18 * 60 * 1000);
+    }, 6000);
     // 18 * 60 * 1000
     
     // Thirst decrements every 15 minutes
@@ -156,7 +156,7 @@ function App() {
           return newValue;
         });
       }
-    }, 15 * 60 * 1000);
+    }, 3000);
     // 15 * 60 * 1000
     
     // Hunger decrements every 36 minutes
@@ -167,7 +167,7 @@ function App() {
           return newValue;
         });
       }
-    }, 36 * 60 * 1000);
+    }, 8000);
     // 36 * 60 * 1000
     
     return () => {
@@ -195,7 +195,8 @@ function App() {
           setHealth(h => Math.min(h + 1, 10));
         }
       }
-    }, 60 * 1000);
+    }, 2000);
+    // 60 * 1000
     
     return () => {
       clearInterval(healthInterval);
