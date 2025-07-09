@@ -56,7 +56,7 @@ const ProgressBar = ({ dueDate }) => {
   return (
     <div className="w-full bg-[#303030] p-3">
       <div className="flex justify-between items-center mb-2">
-        <h3 className="text-sm font-medium text-gray-300">Assignment Progress</h3>
+        <h3 className="text-sm font-medium text-gray-300">Task Progress</h3>
         <span className="italic text-sm font-medium text-gray-300">
           {timeRemaining}
         </span>
