@@ -10,16 +10,15 @@ const ThirstBar = ({ value = 0, onFill }) => {
   };
 
   return (
-    <div className="flex items-center mb-4 font-medium text-lg tracking-wider">
-    {/* Label with button */}
-    <div className="w-28 mr-4 flex items-center">
-      <button
-        onClick={onFill}
-        className="bg-gray-800 border-2 border-white rounded-md text-white text-xl mr-2 
-                   cursor-pointer transition-all duration-200 hover:bg-gray-600 hover:scale-110 
-                   active:bg-gray-700 active:scale-95 focus:outline-none px-1.5 py-0.5"
-        aria-label="Fill Thirst Bar"
-      >
+    <div className="flex items-center mb-4 font-medium text-lg tracking-wide max-w-full sm:flex-row flex-col sm:items-center items-start">
+      <div className="flex items-center mr-4 tracking-wider w-28 sm:w-28 md:w-32 mb-2 sm:mb-0">
+        <button
+          onClick={onFill}
+          className="mb-1 sm:mb-0 bg-gray-800 border-2 border-white rounded-md text-white text-xl mr-2 
+                    cursor-pointer transition-all duration-200 hover:bg-gray-600 hover:scale-110 
+                    active:bg-gray-700 active:scale-95 focus:outline-none px-1.5 py-0.5"
+          aria-label="Fill Thirst Bar"
+        >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 13 13" shapeRendering="crispEdges" width="24" height="24">
             <metadata>Made with Pixels to Svg https://codepen.io/shshaw/pen/XbxvNj</metadata>
             <path stroke="#000000" d="M2 0h9M1 1h1M11 1h1M0 2h1M6 2h1M12 2h1M0 3h1M5 3h1M7 3h1M12 3h1M0 4h1M5 4h1M7 4h1M12 4h1M0 5h1M4 5h1M8 5h1M12 5h1M0 6h1M3 6h1M9 6h1M12 6h1M0 7h1M3 7h1M9 7h1M12 7h1M0 8h1M3 8h1M9 8h1M12 8h1M0 9h1M4 9h1M8 9h1M12 9h1M0 10h1M5 10h3M12 10h1M1 11h1M11 11h1M2 12h9" />
@@ -29,8 +28,7 @@ const ThirstBar = ({ value = 0, onFill }) => {
           </svg>
         </button> THIRST
       </div>
-      &nbsp;
-      <div className="flex gap-1">
+      <div className="flex gap-1 flex-wrap sm:flex-nowrap">
         {[...Array(10)].map((_, index) => (
           <div 
             key={index}

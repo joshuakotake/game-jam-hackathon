@@ -10,13 +10,12 @@ const HealthBar = ({ value = 0 }) => {
   };
   
   return (
-    <div className="flex items-center mb-4 font-medium text-lg tracking-wider">
-      {/* Label with button */}
-      <div className="w-28 mr-4 flex items-center">
+    <div className="flex items-center mb-4 font-medium text-lg tracking-wide max-w-full sm:flex-row flex-col sm:items-center items-start">
+      <div className="flex items-center mr-4 tracking-wider w-28 sm:w-28 md:w-32 mb-2 sm:mb-0">
         <button
-          className="bg-gray-800 border-2 border-white rounded-md text-white text-xl mr-2 
-                     cursor-pointer transition-all duration-200 hover:bg-gray-600 hover:scale-110 
-                     active:bg-gray-700 active:scale-95 focus:outline-none px-1.5 py-0.5"
+          className="mb-1 sm:mb-0 bg-gray-800 border-2 border-white rounded-md text-white text-xl mr-2 
+          cursor-pointer transition-all duration-200 hover:bg-gray-600 hover:scale-110 
+          active:bg-gray-700 active:scale-95 focus:outline-none px-1.5 py-0.5"
           aria-label="Fill Health Bar"
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -0.5 13 13" shapeRendering="crispEdges" width="24" height="24">
@@ -29,8 +28,7 @@ const HealthBar = ({ value = 0 }) => {
         </button> 
         HEALTH
       </div>
-      &nbsp;
-      <div className="flex gap-1">
+      <div className="flex gap-1 flex-wrap sm:flex-nowrap">
         {[...Array(10)].map((_, index) => (
           <div 
             key={index}
