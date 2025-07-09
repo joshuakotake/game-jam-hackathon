@@ -57,14 +57,6 @@ html, body {
   image-rendering: pixelated;
 }
 
-/* Color for each bar type */
-.bar-container:has(.bar-label:contains('ENERGY')) .bar-segment.filled { background: #6cf; }
-.bar-container:has(.bar-label:contains('HEALTH')) .bar-segment.filled { background: #e74c3c; }
-.bar-container:has(.bar-label:contains('THIRST')) .bar-segment.filled { background: #3498db; }
-.bar-container:has(.bar-label:contains('HUNGER')) .bar-segment.filled { background: #f1c40f; }
-
-/* fallback for browsers without :has() */
-.bar-segment.filled { background: #6cf; }
 
 /* Center bars in bottom left */
 .bars-section {
