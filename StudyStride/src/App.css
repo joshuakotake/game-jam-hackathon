@@ -73,7 +73,7 @@ html, body {
   display: flex;
   width: 1600px;
   height: 132px;
-  animation: ground-scroll 10s linear infinite;
+  animation: ground-scroll 20s linear infinite;
 }
 
 

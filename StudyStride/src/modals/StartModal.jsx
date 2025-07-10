@@ -47,7 +47,6 @@ export default function StartModal({ dueDate, setDueDate, dateMissing, dateInval
             <ul className="list-disc list-inside space-y-2">
               <li>Set a due date to track your progress.</li>
               <li><span className="text-yellow-600 font-semibold">Energy, Thirst, and Hunger</span> gradually deplete.</li>
-              <li>Each stat decreases by <span className="text-red-600 font-bold">1</span> based on your selected rate.</li>
               <li>Lose <span className="text-red-700 font-bold">1 health</span> per depleted stat (max <span className="font-bold">3</span>).</li>
               <li><span className="text-green-600 font-semibold">Health recovers</span> when all stats are above <span className="font-bold">7</span>.</li>
               <li>Final score is ranked <span className="text-purple-700 font-semibold">S–F</span> based on health lost.</li>
@@ -55,7 +54,6 @@ export default function StartModal({ dueDate, setDueDate, dateMissing, dateInval
             </ul>
           </div>
         </div>
-
 
         <h1 className="text-xl font-bold text-gray-900 mb-1">Welcome to StudyStride</h1>
         <h2 className="text-lg text-gray-800 font-medium mb-6">Start New Task</h2>
@@ -69,7 +67,7 @@ export default function StartModal({ dueDate, setDueDate, dateMissing, dateInval
           {/* Task Due Date */}
           <div className="mb-6">
             <label htmlFor="due-date-input" className="block text-sm font-medium text-gray-700 mb-1">
-              Task Due Date <span className="text-red-500">*</span>{' '}
+              Task Due Date <span className="text-red-500">*</span>{' '} <span className="text-xs text-gray-500">(over 15 min from now)</span>
             </label>
             <input
               id="due-date-input"
@@ -94,6 +92,8 @@ export default function StartModal({ dueDate, setDueDate, dateMissing, dateInval
           </div>
 
           {/* Sliders */}
+          <p className="text-sm font-medium text-gray-700 mb-1">Optional:</p>
+          <p className="text-xs text-gray-500 mb-2">Depletion rate is the time it takes for a stat to fully deplete and for the player to start losing HP (refresh the page to get the recommended values)</p>
           <StatSlider
             id="energy-interval-input"
             label="Energy Depletion Rate"
