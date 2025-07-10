@@ -33,7 +33,7 @@ export default function StatSlider({ id, label, value, onChange }) {
       <input
         id={id}
         type="range"
-        min={1}
+        min={60}
         max={3600}
         step={10}
         value={value}
