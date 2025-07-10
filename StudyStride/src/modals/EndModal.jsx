@@ -49,7 +49,7 @@ const EndModal = ({ healthLost, onRestart }) => {
               <span className={getRankingColor(rank)}>{rank}</span>
             </div>
             <div className="text-lg font-semibold text-gray-700 mb-2">
-              Total Health Lost: {healthLost / 2}
+              Total Health Lost: {healthLost}
             </div>
             <div className="text-sm text-gray-600">
               {getRankingMessage(rank)}
