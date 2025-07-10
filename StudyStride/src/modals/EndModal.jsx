@@ -2,11 +2,11 @@ import React from 'react';
 
 const EndModal = ({ healthLost, onRestart }) => {
   const getRanking = (healthLost) => {
-    if (healthLost / 2 >= 9) return 'F';
-    if (healthLost / 2 >= 7) return 'D';
-    if (healthLost / 2 >= 5) return 'C';
-    if (healthLost / 2 >= 3) return 'B';
-    if (healthLost / 2 >= 1) return 'A';
+    if (healthLost >= 9) return 'F';
+    if (healthLost >= 7) return 'D';
+    if (healthLost >= 5) return 'C';
+    if (healthLost >= 3) return 'B';
+    if (healthLost >= 1) return 'A';
     return 'S';
   };
 
