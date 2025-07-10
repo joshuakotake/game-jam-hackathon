@@ -83,6 +83,11 @@ function App() {
   // End Modal
   const [showEndModal, setShowEndModal] = useState(false);
 
+  // Intervals
+  const [energyInterval, setEnergyInterval] = useState(1080);
+  const [thirstInterval, setThirstInterval] = useState(900);
+  const [hungerInterval, setHungerInterval] = useState(2160);
+
   // Load stored bar values
   useEffect(() => {
     const stored = localStorage.getItem('barValues');
@@ -138,42 +143,42 @@ function App() {
     if (!gameStarted || gamePaused || gameEnded) return;
     
     // Energy decrements every 18 minutes
-    const energyInterval = setInterval(() => {
+    const energyTimer = setInterval(() => {
       if (!gamePaused) {
         setEnergy(prev => {
           const newValue = Math.max(prev - 1, 1);
           return newValue;
         });
       }
-    }, 18 * 60 * 1000);
+    }, energyInterval * 1000);
     // 18 * 60 * 1000
     
     // Thirst decrements every 15 minutes
-    const thirstInterval = setInterval(() => {
+    const thirstTimer = setInterval(() => {
       if (!gamePaused) {
         setThirst(prev => {
           const newValue = Math.max(prev - 1, 1);
           return newValue;
         });
       }
-    }, 15 * 60 * 1000);
+    }, thirstInterval * 1000);
     // 15 * 60 * 1000
     
     // Hunger decrements every 36 minutes
-    const hungerInterval = setInterval(() => {
+    const hungerTimer = setInterval(() => {
       if (!gamePaused) {
         setHunger(prev => {
           const newValue = Math.max(prev - 1, 1);
           return newValue;
         });
       }
-    }, 36 * 60 * 1000);
+    }, hungerInterval * 1000);
     // 36 * 60 * 1000
     
     return () => {
-      clearInterval(energyInterval);
-      clearInterval(thirstInterval);
-      clearInterval(hungerInterval);
+      clearInterval(energyTimer);
+      clearInterval(thirstTimer);
+      clearInterval(hungerTimer);
     };
   }, [gameStarted, gamePaused, gameEnded]);
 
@@ -181,7 +186,7 @@ function App() {
   useEffect(() => {
     if (!gameStarted || gamePaused || gameEnded) return;
     
-    // Health checks every minute
+    // Health checks every 5 seconds
     const healthInterval = setInterval(() => {
       if (!gamePaused && !gameEnded) {
         const penalty = getHealthPenalty({ energy, thirst, hunger });
@@ -201,7 +206,7 @@ function App() {
           setHealth(h => Math.min(h + 1, 10));
         }
       }
-    }, 60 * 1000);
+    }, 5000);
     
     return () => {
       clearInterval(healthInterval);
@@ -544,6 +549,12 @@ function App() {
           dateMissing={dateMissing}
           dateInvalid={dateInvalid}
           onSubmit={startGame}
+          energyInterval={energyInterval}
+          thirstInterval={thirstInterval}
+          hungerInterval={hungerInterval}
+          setEnergyInterval={setEnergyInterval}
+          setThirstInterval={setThirstInterval}
+          setHungerInterval={setHungerInterval}
         />
       )}
       {showResetModal && (
