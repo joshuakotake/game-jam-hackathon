@@ -206,7 +206,7 @@ function App() {
           setHealth(h => Math.min(h + 1, 10));
         }
       }
-    }, 5000);
+    }, 60 * 1000);
     
     return () => {
       clearInterval(healthInterval);

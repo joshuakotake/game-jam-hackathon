@@ -1,6 +1,9 @@
 import StatSlider from "../utils/slider";
+import { useState } from "react";
 
 export default function StartModal({ dueDate, setDueDate, dateMissing, dateInvalid, onSubmit, energyInterval, thirstInterval, hungerInterval, setEnergyInterval, setThirstInterval, setHungerInterval }) {
+  const [showInfo, setShowInfo] = useState(false);
+
   return (
     <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center" role="dialog" aria-modal="true">
       <div className="w-full max-w-md rounded-xl bg-white shadow-xl p-6 relative">
@@ -12,7 +15,12 @@ export default function StartModal({ dueDate, setDueDate, dateMissing, dateInval
           <path stroke="#000000" d="M3 3h1M6 3h1M3 4h1M6 4h1" />
         </svg>
 
-        <div className="absolute top-6 right-4 group cursor-pointer">
+        <div
+          className="absolute top-7 right-4 group"
+          onClick={() => setShowInfo(prev => !prev)}
+          onMouseLeave={() => setShowInfo(false)}
+        >
+          <button type="button" className="text-gray-500 hover:text-gray-700">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-5 w-5 text-gray-500 hover:text-gray-700 cursor-pointer"
@@ -28,20 +36,26 @@ export default function StartModal({ dueDate, setDueDate, dateMissing, dateInval
               d="M13 16h-1v-4h-1m1-4h.01M12 20a8 8 0 100-16 8 8 0 000 16z"
             />
           </svg>
+          </button>
 
-          <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-gray-50 border border-gray-300 shadow-lg rounded-md p-4 text-sm text-gray-700 z-50 hidden group-hover:block">
+          <div
+            className={`absolute right-0 mt-2 w-72 sm:w-80 bg-gray-50 border border-gray-300 shadow-lg rounded-md p-4 text-sm text-gray-700 z-50 ${
+              showInfo ? 'block' : 'hidden'
+            }`}
+          >
             <p className="font-bold text-gray-900 text-lg mb-3">How It Works:</p>
             <ul className="list-disc list-inside space-y-2">
               <li>Set a due date to track your progress.</li>
-              <li><span className="text-yellow-600 font-semibold">Energy, Thirst, and Hunger</span> gradually deplete over time.</li>
-              <li>Each stat decreases by <span className="text-red-600 font-bold">1</span> based on the selected rate.</li>
-              <li>Lose <span className="text-red-700 font-bold">1 health point</span> per depleted stat (<span className="text-red-700 font-bold">max 3</span> at once).</li>
-              <li><span className="text-green-600 font-semibold">Health replenishes</span> when all stats are above <span className="font-bold">7</span>.</li>
-              <li>Your score is based on total health lost (ranked <span className="text-purple-700 font-semibold">S–F</span>).</li>
-              <li className="text-red-700 font-semibold">Fail if health drops to 1 or you lose 9+ health points.</li>
+              <li><span className="text-yellow-600 font-semibold">Energy, Thirst, and Hunger</span> gradually deplete.</li>
+              <li>Each stat decreases by <span className="text-red-600 font-bold">1</span> based on your selected rate.</li>
+              <li>Lose <span className="text-red-700 font-bold">1 health</span> per depleted stat (max <span className="font-bold">3</span>).</li>
+              <li><span className="text-green-600 font-semibold">Health recovers</span> when all stats are above <span className="font-bold">7</span>.</li>
+              <li>Final score is ranked <span className="text-purple-700 font-semibold">S–F</span> based on health lost.</li>
+              <li className="text-red-700 font-semibold">Fail if health hits 1 or you lose 9+ points.</li>
             </ul>
           </div>
         </div>
+
 
         <h1 className="text-xl font-bold text-gray-900 mb-1">Welcome to StudyStride</h1>
         <h2 className="text-lg text-gray-800 font-medium mb-6">Start New Task</h2>
@@ -75,7 +89,7 @@ export default function StartModal({ dueDate, setDueDate, dateMissing, dateInval
               <p className="mt-2 text-sm text-red-600">Due date is required.</p>
             )}
             {dateInvalid && (
-              <p className="mt-2 text-sm text-red-600">Due date has to be over 1 min from now.</p>
+              <p className="mt-2 text-sm text-red-600">Due date has to be over 15 min from now.</p>
             )}
           </div>
 

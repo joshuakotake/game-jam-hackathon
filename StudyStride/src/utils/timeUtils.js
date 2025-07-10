@@ -3,7 +3,7 @@
 export const isDueDateValid = (dateString) => {
   const selectedDate = new Date(dateString)
   const now = new Date()
-  const minValidDate = new Date(now.getTime() + 30 * 1000)
+  const minValidDate = new Date(now.getTime() + 15 * 60 * 1000)
   return selectedDate >= minValidDate
 }
 
