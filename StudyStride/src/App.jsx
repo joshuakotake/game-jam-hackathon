@@ -33,6 +33,12 @@ function getInitialBars() {
   return { energy: 10, health: 10, thirst: 10, hunger: 10 };
 }
 
+const getInitialInterval = (key, defaultValue) => {
+  const stored = localStorage.getItem(key);
+  const parsed = parseInt(stored, 10);
+  return !isNaN(parsed) ? parsed : defaultValue;
+};
+
 function getInitialTotalHealthLost() {
   const stored = localStorage.getItem('totalHealthLost');
   if (stored) {
@@ -84,9 +90,9 @@ function App() {
   const [showEndModal, setShowEndModal] = useState(false);
 
   // Intervals
-  const [energyInterval, setEnergyInterval] = useState(1080);
-  const [thirstInterval, setThirstInterval] = useState(900);
-  const [hungerInterval, setHungerInterval] = useState(2160);
+  const [energyInterval, setEnergyInterval] = useState(() => getInitialInterval('energyInterval', 1080));
+  const [thirstInterval, setThirstInterval] = useState(() => getInitialInterval('thirstInterval', 900));
+  const [hungerInterval, setHungerInterval] = useState(() => getInitialInterval('hungerInterval', 2160));
 
   // Load stored bar values
   useEffect(() => {
@@ -138,11 +144,16 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('energyInterval', energyInterval);
+    localStorage.setItem('thirstInterval', thirstInterval);
+    localStorage.setItem('hungerInterval', hungerInterval);
+  }, [energyInterval, thirstInterval, hungerInterval]);
+  
   // Status bars effect
   useEffect(() => {
     if (!gameStarted || gamePaused || gameEnded) return;
-    
-    // Energy decrements every 18 minutes
+
     const energyTimer = setInterval(() => {
       if (!gamePaused) {
         setEnergy(prev => {
@@ -298,7 +309,6 @@ function App() {
     }
   };
   
-
   // Prevent closing of modal
   useEffect(() => {
     const preventEscape = (e) => {
