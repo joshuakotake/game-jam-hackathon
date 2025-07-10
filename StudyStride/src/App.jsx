@@ -61,7 +61,7 @@ function App() {
   const [gameEnded, setGameEnded] = useState(false);
 
   // Health tracking
-  const [totalHealthLost, setTotalHealthLost] = useState(0);
+  const [totalHealthLost, setTotalHealthLost] = useState(() => getInitialTotalHealthLost());
 
   // Status bars state
   const [energy, setEnergy] = useState(() => getInitialBars().energy);
@@ -80,19 +80,31 @@ function App() {
   const [dateInvalid, setDateInvalid] = useState(false)
 
   // Reset Modal
-  const [showResetModal, setShowResetModal] = useState(false)
+  const [showResetModal, setShowResetModal] = useState(false);
 
   // Rest Modal
-  const [showRestModal, setShowRestModal] = useState(false);
-  const [currentActivity, setCurrentActivity] = useState(null);
+  const [showRestModal, setShowRestModal] = useState(() => {
+    return localStorage.getItem('isResting') === 'true';
+  });
+  const [currentActivity, setCurrentActivity] = useState(() => {
+    return localStorage.getItem('restActivityType') || null;
+  });  
 
   // End Modal
-  const [showEndModal, setShowEndModal] = useState(false);
-
+  const [showEndModal, setShowEndModal] = useState(() => {
+    return localStorage.getItem('showEndModal') === 'true';
+  });
+  
   // Intervals
   const [energyInterval, setEnergyInterval] = useState(() => getInitialInterval('energyInterval', 1080));
   const [thirstInterval, setThirstInterval] = useState(() => getInitialInterval('thirstInterval', 900));
   const [hungerInterval, setHungerInterval] = useState(() => getInitialInterval('hungerInterval', 2160));
+
+  useEffect(() => {
+    if (showEndModal) {
+      localStorage.setItem('showEndModal', 'true');
+    }
+  }, [showEndModal]);
 
   // Load stored bar values
   useEffect(() => {
@@ -152,7 +164,7 @@ function App() {
   
   // Status bars effect
   useEffect(() => {
-    if (!gameStarted || gamePaused || gameEnded) return;
+    if (!gameStarted || gamePaused || gameEnded || showRestModal) return;
 
     const energyTimer = setInterval(() => {
       if (!gamePaused) {
@@ -191,7 +203,7 @@ function App() {
       clearInterval(thirstTimer);
       clearInterval(hungerTimer);
     };
-  }, [gameStarted, gamePaused, gameEnded]);
+  }, [gameStarted, gamePaused, gameEnded, showRestModal]);
 
   // Separate effect for health checks to avoid stale closure issues
   useEffect(() => {
@@ -217,7 +229,7 @@ function App() {
           setHealth(h => Math.min(h + 1, 10));
         }
       }
-    }, 60 * 1000);
+    }, 1000);
     
     return () => {
       clearInterval(healthInterval);
@@ -274,6 +286,7 @@ function App() {
     localStorage.removeItem('dueDate')
     localStorage.removeItem('assignmentStartTime')
     localStorage.removeItem('totalHealthLost')
+    localStorage.removeItem('showEndModal')
     setDueDateInput('')
     setHasStoredDueDate(false)
     setShowStartModal(true)
@@ -290,16 +303,19 @@ function App() {
   // Start Rest Activity
   const startRestActivity = (activityType) => {
     setCurrentActivity(activityType);
-    setGamePaused(true);
     setShowRestModal(true);
+    setGamePaused(true);
+    localStorage.setItem('isResting', 'true');
+    localStorage.setItem('restActivityType', activityType);
   };
   
   // Finish Rest Activity
   const completeRestActivity = () => {
     setShowRestModal(false);
     setGamePaused(false);
-    
-    // Refill the appropriate bar
+    localStorage.removeItem('isResting');
+    localStorage.removeItem('restActivityType');
+  
     if (currentActivity === 'energy') {
       setEnergy(10);
     } else if (currentActivity === 'thirst') {
