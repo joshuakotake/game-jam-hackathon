@@ -1,12 +1,10 @@
 
-// Check if the due date is valid (at least 24 hours from now)
+// Check if the due date is valid
 export const isDueDateValid = (dateString) => {
   const selectedDate = new Date(dateString)
   const now = new Date()
-  const minValidDate = new Date(now.getTime() + 24 * 60 * 60 * 1000)
+  const minValidDate = new Date(now.getTime() + 30 * 1000)
   return selectedDate >= minValidDate
-  // Set as true for testing purposes
-  // return true;
 }
 
 // Format ISO date string into readable format
