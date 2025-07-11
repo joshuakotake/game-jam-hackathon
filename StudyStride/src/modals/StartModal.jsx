@@ -93,7 +93,7 @@ export default function StartModal({ dueDate, setDueDate, dateMissing, dateInval
 
           {/* Sliders */}
           <p className="text-sm font-medium text-gray-700 mb-1">Optional:</p>
-          <p className="text-xs text-gray-500 mb-2">Depletion rate is the time it takes for a stat to fully deplete and for the player to start losing HP (refresh the page to get the recommended values)</p>
+          <p className="text-xs text-gray-500 mb-2">Depletion rate is the time it takes for a stat to fully deplete and for the player to start losing HP.</p>
           <StatSlider
             id="energy-interval-input"
             label="Energy Depletion Rate"
