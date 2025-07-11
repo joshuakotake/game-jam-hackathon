@@ -12,6 +12,8 @@ By gamifying self-care, StudyStride makes wellbeing fun and rewarding!
 
 [Access our website here!!](https://study-stride.vercel.app/)
 
+[Check out our project on DevPost!!](https://devsoc-game-jam-hackathon.devpost.com/project-gallery)
+
 # How it works:
 
 * Task Tracking:
