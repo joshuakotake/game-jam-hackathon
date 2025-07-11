@@ -281,24 +281,34 @@ function App() {
     setGameStarted(true);
   };
 
- // Reset Game
-  const resetGame = () => {
-    localStorage.removeItem('dueDate')
-    localStorage.removeItem('assignmentStartTime')
-    localStorage.removeItem('totalHealthLost')
-    localStorage.removeItem('showEndModal')
-    setDueDateInput('')
-    setHasStoredDueDate(false)
-    setShowStartModal(true)
-    setGameStarted(false);
-    setGameEnded(false);
-    setTotalHealthLost(0);
-    setEnergy(10);
-    setHealth(10);
-    setThirst(10);
-    setHunger(10);
-    localStorage.setItem('barValues', JSON.stringify({ energy: 10, health: 10, thirst: 10, hunger: 10 }));
-  };
+   const resetGame = () => {
+     localStorage.removeItem('dueDate');
+     localStorage.removeItem('assignmentStartTime');
+     localStorage.removeItem('totalHealthLost');
+     localStorage.removeItem('showEndModal');
+     localStorage.removeItem('isResting');
+     localStorage.removeItem('restActivityType');
+     
+     localStorage.setItem('energyInterval', '1080');
+     localStorage.setItem('thirstInterval', '900');
+     localStorage.setItem('hungerInterval', '2160');
+     
+     // Reset bars
+     const defaultBars = { energy: 10, health: 10, thirst: 10, hunger: 10 };
+     localStorage.setItem('barValues', JSON.stringify(defaultBars));
+     setEnergy(10);
+     setHealth(10);
+     setThirst(10);
+     setHunger(10);
+     
+     // Reset state
+     setDueDateInput('');
+     setHasStoredDueDate(false);
+     setShowStartModal(true);
+     setGameStarted(false);
+     setGameEnded(false);
+     setTotalHealthLost(0);
+   };
 
   // Start Rest Activity
   const startRestActivity = (activityType) => {
